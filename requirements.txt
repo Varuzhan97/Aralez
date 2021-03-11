@@ -1,0 +1,16 @@
+Raspberry Pi OS Lite(32bit)
+
+sudo apt install git python3-pip python3-scipy python3-numpy python3-pyaudio libatlas3-base
+pip3 install deepspeech --upgrade
+pip3 install deepspeech --no-cache-dir
+
+sudo mount /dev/sda1 /mnt
+sudo unmount /mnt
+
+pip3 install git+https://github.com/tflearn/tflearn.git
+
+pip3 install PyYAML==5.4.1
+pip3 install webrtcvad==2.0.10
+pip3 install nltk==3.5
+pip3 install tensorflow==1.14.0
+pip3 install tflearn==0.5.0
