@@ -1,0 +1,12 @@
+Project: Aralez
+Languages: {'En': 0, 'Ru': 1} #Available languages
+Language: En #Startup language
+Games:
+  Capitals:
+    Questions Number: 10
+    Data Folder: "Games/Capitals/Data" #YAML file that contains all countries and capitals
+    TTS Folder: "TTS/Capitals" #TTS folder that contains .mp3 speech files for the game
+STT:
+  Model Folder: "STT/Model" #STT models folder
+QA:
+  Model Folder: "QA/Model" #QA models folder
