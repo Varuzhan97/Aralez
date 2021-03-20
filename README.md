@@ -1,5 +1,5 @@
 # Aralez
-Supported Languages are:
+Supported languages are:
   - [x] English(En)
   - [x] Russian(Ru)
 
