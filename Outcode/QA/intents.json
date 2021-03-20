@@ -1,0 +1,14 @@
+{"intents":
+  [
+    {"tag": "greeting",
+     "patterns": ["***", "***"],
+     "responses": ["###.mp3", "###.mp3"],
+     "context_set": ""
+    },
+    {"tag": "name",
+     "patterns": ["***", "***", "***"],
+     "responses": ["###.mp3", "###.mp3", "###.mp3"],
+     "context_set": ""
+    }
+  ]
+}
