@@ -1,14 +1,28 @@
 {"intents":
-  [
-    {"tag": "greeting",
-     "patterns": ["***", "***"],
-     "responses": ["###.mp3", "###.mp3"],
-     "context_set": ""
-    },
-    {"tag": "name",
-     "patterns": ["***", "***", "***"],
-     "responses": ["###.mp3", "###.mp3", "###.mp3"],
-     "context_set": ""
-    }
-  ]
+[
+{"tag": "0",
+"patterns": ["hello", "hi", "good morning", "good afternoon", "good evening"],
+"information": "Time-Based"
+},
+{"tag": "1",
+"patterns": ["what is your name", "what's your name", "please say me your name", "say your name please", "tell your name please", "tell me your name", "say me your name please", "tell me your name please", "your name please", "what can i call you", "what i can call you", "what to call you", "please can you tell me your name", "can you tell me your name"],
+"information": "None"
+},
+{"tag": "25",
+"patterns": ["how many languages do you know", "how many languages can you speak"],
+"information": "None"
+},
+{"tag": "26",
+"patterns": ["change the language", "can you speak in other language", "can you speak in another language", "can you speak other language", "can you speak another language", "please let's change the language", "please let's speak in other language", "please let's speak in another language", "please let's speak other language", "please let's speak another language", "speak in other language", "speak in another language", "speak other language", "speak another language", "let's change the language", "let's speak in other language", "let's speak in another language", "let's speak other language", "let's speak another language", "can you change the language", "change the language", "let's change the language", "please change the language", "set the language to another", "set the language to other"],
+"information": "None"
+},
+{"tag": "27",
+"patterns": ["russian", "change to russian", "change russian", "can you speak in russian", "can you speak russian", "speak in russian", "please let's speak in russian", "can you change the language to russian", "please let's speak russian", "change the language to russian", "please change the language to russian", "please speak in russian", "let's speak in russian", "let's speak russian", "set the language to russian", "set russian", "set to russian", "please let's change the language to russian", "please let's change to russian", "please let's speak in russian", "please let's speak russian", "speak in russian", "speak russian", "let's change the language to russian", "let's change to russian", "let's speak in russian", "let's speak russian", "can you change the language to russian", "can you change to russian", "change the language to russian", "change the language russian", "please change the language to russian", "please change to russian"],
+"information": "Language-Based"
+},
+{"tag": "28",
+"patterns": ["please let's change the language to english", "please let's change to english", "please let's speak in english", "please let's speak english", "change to english", "change english", "speak in english", "speak english", "let's change the language to english", "let's change to english", "let's speak in english", "let's speak english", "can you change the language to english", "can you change to english", "change the language to english", "change the language english", "please change the language to english", "please change to english", "english", "set the language to english", "can you speak in english", "can you speak english", "set english", "set to english", "speak in english", "change the language to english", "please change the language to english", "please speak in english", "can you change the language to english", "please can you change the language to english", "please can you speak in english", "let's speak in English", "let's speak English", "please Let's speak in English", "please Let's speak English"],
+"information": "Language-Based"
+}
+]
 }
