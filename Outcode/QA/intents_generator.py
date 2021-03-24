@@ -28,6 +28,7 @@ if __name__ == "__main__":
     output_file = open('intents.json', 'w')
     lines = []
     current_tag = ''
+    current_info = ''
 
     output_file.write('{"intents":' + '\n' + '[' + '\n')
 
@@ -44,7 +45,7 @@ if __name__ == "__main__":
                     else:
                         output_file.write('"%s", ' % i)
                 output_file.write('],' + '\n')
-                output_file.write('"information": \"' + info + '\"' + '\n')
+                output_file.write('"information": \"' + current_info + '\"' + '\n')
                 if line.strip() == '###END###None###':
                     output_file.write('}' + '\n')
                 else:
@@ -53,6 +54,7 @@ if __name__ == "__main__":
         else:
             lines.append(line.strip())
             current_tag = tag
+            current_info = info
 
     output_file.write(']' + '\n' + '}' + '\n')
     output_file.close()
