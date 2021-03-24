@@ -10,7 +10,10 @@ def g_tts(transcript, language, output_folder, index):
     #tts = gTTS(text=transcript, lang=language, slow = True)
     
     #Take first 3 characters of transcript for the file name
-    file = os.path.join(output_folder, transcript[0:3] + '.mp3')
+    if len(transcript) > 15:
+        file = os.path.join(output_folder, transcript[0:15] + '.mp3')
+    else:
+        file = os.path.join(output_folder, transcript + '.mp3')
     tts.save(file)
     return file
 
