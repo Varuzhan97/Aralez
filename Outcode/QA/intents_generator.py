@@ -25,26 +25,34 @@ def parse_args():
 if __name__ == "__main__":
     params = parse_args()
     input_file = open(params.input_path, 'r')
-    output_file = open('output.txt', 'w')
+    output_file = open('intents.json', 'w')
     lines = []
     current_tag = ''
+
+    output_file.write('{"intents":' + '\n' + '[' + '\n')
+
     for line in input_file:
         if line.startswith('###'):
             tag = line.split('###')[1]
             info = line.split('###')[2]
             if lines:
                 output_file.write('{"tag": \"' + current_tag + '\",' + '\n')
-                output_file.write(' "patterns": [')
+                output_file.write('"patterns": [')
                 for i in lines:
                     if i == lines[-1]:
                         output_file.write('"%s"' % i)
                     else:
                         output_file.write('"%s", ' % i)
                 output_file.write('],' + '\n')
-                output_file.write(' "information": \"' + info + '\"' + '\n')
-                output_file.write('},' + '\n')
+                output_file.write('"information": \"' + info + '\"' + '\n')
+                if line.strip() == '###END###None###':
+                    output_file.write('}' + '\n')
+                else:
+                    output_file.write('},' + '\n')
                 lines.clear()
         else:
             lines.append(line.strip())
             current_tag = tag
+
+    output_file.write(']' + '\n' + '}' + '\n')
     output_file.close()
