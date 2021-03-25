@@ -83,10 +83,11 @@ model = tflearn.DNN(net)
 try:
     model.load("model.tflearn")
 except:
-    model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
+    model.fit(training, output, n_epoch=5000, batch_size=1, show_metric=True)
     model.save("model.tflearn")
 '''
-model.fit(training, output, n_epoch=1500, batch_size=1, show_metric=True)
+#model.fit(training, output, n_epoch=150, batch_size=8, show_metric=True)
+model.fit(training, output, n_epoch=300, batch_size=1, show_metric=True)
 model.save("model.tflearn")
 
 model.load("model.tflearn")
@@ -104,6 +105,7 @@ def bag_of_words(s, words):
 
     return numpy.array(bag)
 
+
 def chat():
     print("Start talking with the bot (type quit to stop)!")
     while True:
@@ -118,8 +120,10 @@ def chat():
         if results[results_index] > 0.95:
             for tg in data["intents"]:
                 if tg['tag'] == tag:
-                    responses = tg['responses']
-            print(random.choice(responses))
+                    print('Tag--->', tg['tag'])
+                    print('Information--->',tg['information'])
+                    #responses = tg['responses']
+            #print(random.choice(responses))
         else:
             print('Sorry, I didn\'t get what you said.')
 
