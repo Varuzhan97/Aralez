@@ -1,31 +1,34 @@
-1) Training.
+1) Alphabet generator from csv.
+python3 training/deepspeech_training/util/check_characters.py -alpha -csv ~/clips/train.csv,~/clips/dev.csv,~/clips/test.csv > Alphabet.txt
+
+2) Training.
 
 python3 DeepSpeech.py --n_hidden 2048 --checkpoint_dir ~/Checkpoints --epochs 500 --train_files ~/clips-rwn-10-dB-Noisy/train.csv --dev_files ~/clips-rwn-10-dB-Noisy/dev.csv --test_files ~/clips-rwn-10-dB-Noisy/test.csv --export_tflite --export_dir ~/Model --train_batch_size 32 --dev_batch_size 32 --test_batch_size 32 --alphabet_config_path ~/Alphabet.txt --use_allow_growth true --train_cudnn true
 
-2) Transfer-learning.
+3) Transfer-learning.
 
 python3 DeepSpeech.py --drop_source_layers 1 --alphabet_config_path ~/Alphabet.txt --save_checkpoint_dir ~/Checkpoints --load_checkpoint_dir ~/Checkpoints --train_files ~/clips-rwn-10-dB-Noisy/train.csv --dev_files ~/clips-rwn-10-dB-Noisy/dev.csv --test_files ~/clips-rwn-10-dB-Noisy/test.csv --export_tflite --export_dir ~/Model --train_batch_size 32 --dev_batch_size 32 --test_batch_size 32 --epochs 500 --use_allow_growth true --train_cudnn true
 
-3) Generate scorer file.
+4) Generate scorer file.
 
-3.1) Generate KenLM language model.
+4.1) Generate KenLM language model.
 
 cd data/lm
 
 python3 generate_lm.py --input_txt ~/all_data.txt --output_dir ~/Model --top_k 500000 --kenlm_bins /home/varuzhan/kenlm/build/bin/ --arpa_order 5 --max_arpa_memory "85%" --arpa_prune "0|0|1" --binary_a_bits 255 --binary_q_bits 8 --binary_type trie
 --discount_fallback
 
-3.2) Generate scorer file.
+4.2) Generate scorer file.
 
 ./generate_scorer_package --alphabet ~/Alphabet.txt --lm ~/Model/lm.binary --vocab ~/Model/vocab-500000.txt --package ~/Model/kenlm.scorer --default_alpha 2.6175607838793176 --default_beta 3.362191052993364
 
-3.3) To find good default values for alpha and beta, first generate a package with any value set for default alpha and beta flags. For this step, it doesn’t matter what values you use, as they’ll be overridden by lm_optimizer.py later. Then, use lm_optimizer.py with this scorer file to find good alpha and beta values. Finally, use generate_scorer_package again, this time with the new values.
+4.3) To find good default values for alpha and beta, first generate a package with any value set for default alpha and beta flags. For this step, it doesn’t matter what values you use, as they’ll be overridden by lm_optimizer.py later. Then, use lm_optimizer.py with this scorer file to find good alpha and beta values. Finally, use generate_scorer_package again, this time with the new values.
 
 CUDA_VISIBLE_DEVICES=1 python3 lm_optimizer.py --test_files ~/clips/validated.csv --checkpoint_dir ~/Checkpoints --scorer ~/Model/kenlm.scorer --alphabet_config_path ~/Alphabet.txt
 
-4) Important notes.
+5) Important notes.
 
-4.1) Validate function.
+5.1) Validate function.
 
 Some importers might require additional code to properly handled your locale-specific requirements. Such handling is dealt with --validate_label_locale flag that allows you to source out-of-tree Python script that defines a validate_label function. Please refer to util/importers.py for implementation example of that function. If you don’t provide this argument, the default validate_label function will be used. This one is only intended for English language, so you might have consistency issues in your data for other languages.
 
@@ -37,5 +40,5 @@ def validate_label(label):
     return label.lower() # lower case valid labels
 If you’ve run the old importers (in util/importers/), they could have removed source files that are needed for the new importers to run. In that case, simply remove the extracted folders and let the importer extract and process the dataset from scratch, and things should work.
 
-4.2) 
+
 
