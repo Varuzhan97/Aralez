@@ -12,6 +12,9 @@ python3 DeepSpeech.py --drop_source_layers 1 --alphabet_config_path ~/Alphabet.t
 
 4) Generate scorer file.
 
+The scorer is used to compute the likelihood (also called a score, hence the name “scorer”) of sequences of words or characters in the output, to guide the decoder towards more likely results. This improves accuracy significantly.
+At decoding time, if using an external scorer, it MUST be word based and MUST be built using the same alphabet file used for training. Word based means the text corpus used to build the scorer should contain words separated by whitespace. 
+
 Generate KenLM language model.
 
 cd data/lm
