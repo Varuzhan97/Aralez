@@ -1,4 +1,5 @@
 1) Alphabet generator from csv.
+
 python3 training/deepspeech_training/util/check_characters.py -alpha -csv ~/clips/train.csv,~/clips/dev.csv,~/clips/test.csv > Alphabet.txt
 
 2) Training.
@@ -11,18 +12,18 @@ python3 DeepSpeech.py --drop_source_layers 1 --alphabet_config_path ~/Alphabet.t
 
 4) Generate scorer file.
 
-4.1) Generate KenLM language model.
+Generate KenLM language model.
 
 cd data/lm
 
 python3 generate_lm.py --input_txt ~/all_data.txt --output_dir ~/Model --top_k 500000 --kenlm_bins /home/varuzhan/kenlm/build/bin/ --arpa_order 5 --max_arpa_memory "85%" --arpa_prune "0|0|1" --binary_a_bits 255 --binary_q_bits 8 --binary_type trie
 --discount_fallback
 
-4.2) Generate scorer file.
+Generate scorer file.
 
 ./generate_scorer_package --alphabet ~/Alphabet.txt --lm ~/Model/lm.binary --vocab ~/Model/vocab-500000.txt --package ~/Model/kenlm.scorer --default_alpha 2.6175607838793176 --default_beta 3.362191052993364
 
-4.3) To find good default values for alpha and beta, first generate a package with any value set for default alpha and beta flags. For this step, it doesn’t matter what values you use, as they’ll be overridden by lm_optimizer.py later. Then, use lm_optimizer.py with this scorer file to find good alpha and beta values. Finally, use generate_scorer_package again, this time with the new values.
+To find good default values for alpha and beta, first generate a package with any value set for default alpha and beta flags. For this step, it doesn’t matter what values you use, as they’ll be overridden by lm_optimizer.py later. Then, use lm_optimizer.py with this scorer file to find good alpha and beta values. Finally, use generate_scorer_package again, this time with the new values.
 
 CUDA_VISIBLE_DEVICES=1 python3 lm_optimizer.py --test_files ~/clips/validated.csv --checkpoint_dir ~/Checkpoints --scorer ~/Model/kenlm.scorer --alphabet_config_path ~/Alphabet.txt
 
