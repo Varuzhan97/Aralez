@@ -40,5 +40,44 @@ def validate_label(label):
     return label.lower() # lower case valid labels
 If you’ve run the old importers (in util/importers/), they could have removed source files that are needed for the new importers to run. In that case, simply remove the extracted folders and let the importer extract and process the dataset from scratch, and things should work.
 
+5.2) Making a mmap-able model for inference
+
+The output_graph.pb model file generated in the above step will be loaded in memory to be dealt with when running inference. This will result in extra loading time and memory consumption. One way to avoid this is to directly read data from the disk.
+
+Download the tool.
+python3 util/taskcluster.py --source tensorflow --artifact convert_graphdef_memmapped_format --branch r1.15 --target mmap
+
+Run.
+mmap/convert_graphdef_memmapped_format --in_graph=~/Model/deepspeech-0.9.3-models.pb --out_graph=~/Model/deepspeech-0.9.3-models.pbmm
+
+5.3) ffmpeg.
+
+ffmpeg -i input.wav -vn -ar 44100 -ac 2 -b:a 192k output.mp3
+
+Explanation of the used arguments in this example:
+-i - input file.
+
+-vn - Disable video, to make sure no video (including album cover image) is included if the source would be a video file.
+
+-ar - Set the audio sampling frequency. For output streams it is set by default to the frequency of the corresponding input stream. For input streams this option only makes sense for audio grabbing devices and raw demuxers and is mapped to the corresponding demuxer options.
+
+-ac - Set the number of audio channels. For output streams it is set by default to the number of input audio channels. For input streams this option only makes sense for audio grabbing devices and raw demuxers and is mapped to the corresponding demuxer options. So used here to make sure it is stereo (2 channels).
+
+-b:a - Converts the audio bitrate to be exact 192kbit per second.
+
+5.4) CUDA and cuDNN installation.
+
+sudo sh cuda_10.0.130_410.48_linux.run --override
+
+tar -xzvf cudnn-10.0-linux-x64-v7.6.2.24.tgz
+
+sudo cp cuda/include/cudnn*.h /usr/local/cuda/include
+
+sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
+
+sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
+
+
+
 
 
