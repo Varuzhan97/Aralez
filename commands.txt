@@ -28,7 +28,7 @@ Generate scorer file.
 
 To find good default values for alpha and beta, first generate a package with any value set for default alpha and beta flags. For this step, it doesn’t matter what values you use, as they’ll be overridden by lm_optimizer.py later. Then, use lm_optimizer.py with this scorer file to find good alpha and beta values. Finally, use generate_scorer_package again, this time with the new values.
 
-CUDA_VISIBLE_DEVICES=1 python3 lm_optimizer.py --test_files ~/clips/dev.csv --checkpoint_dir ~/Checkpoints --scorer ~/Model/kenlm.scorer --alphabet_config_path ~/Alphabet.txt
+CUDA_VISIBLE_DEVICES=1 python3 lm_optimizer.py --test_files ~/clips/validated.csv --checkpoint_dir ~/Checkpoints --scorer ~/Model/kenlm.scorer --alphabet_config_path ~/Alphabet.txt
 
 5) Important notes.
 
