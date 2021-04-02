@@ -1,0 +1,532 @@
+###0###
+hello
+hi
+good morning
+good afternoon
+good evening
+###1###
+what is your name
+what's your name
+please say me your name
+say your name please
+tell your name please
+tell me your name
+say me your name please
+tell me your name please
+your name please
+what can i call you
+what i can call you
+what to call you
+please can you tell me your name
+can you tell me your name
+###2###
+what means your name
+what is the meaning of your name
+say me the meaning of your name
+tell me the meaning of your name
+###3###
+can you introduce yourself
+can you tell about yourself
+can you tell me about yourself
+who are you
+###4###
+what is your nation
+what is your nationality
+say me your nation
+say me your nationality
+tell me your nation
+tell me your nationality
+###5###
+where are you from
+where did you come from
+what is your homeland
+What is your country
+what is your motherland
+where you came from
+###6###
+how old are you
+what age you are
+###7###
+what is your gender
+are you a boy or a girl
+are you a boy
+are you a girl
+are you boy or girl
+are you boy
+are you girl
+###8###
+do you have friends
+do you have a friend
+do you have friend
+you know who i am
+you know who am i
+do you know who i am
+do you know who am i
+Who am I for you
+am I your friend
+are you my friend
+###9####
+how are you
+are you well
+are you good
+How do you feel
+how are you feeling
+how is the mood
+how is your mood
+How's everything
+How's it going
+What's up
+How are you doing
+What's new
+How is everything
+How is it going
+How are things
+What is new
+You all right
+###10###
+what can you do
+what you can do
+What you could do
+###11###
+what games can you play
+how many games can you play
+can you play games
+can you play games with me
+can you play a game with me
+###12###
+let's play game
+let's play games
+play game
+play games
+play games with me
+play game with me
+play with me
+start to play with me
+i want to play games
+i want to play with you
+i want to play games with you
+###13###
+start capitals
+start capitals game
+start game capitals
+start the game capitals
+let's play capitals
+i want to play capitals
+i want to play capitals game
+i want to play capitals game with you
+i want to play the game capitals with you
+i want to play the game calling capitals with you
+i want to play with you the game calling capitals
+i want to play capital
+i want to play capital game
+i want to play capital game with you
+i want to play the game capital with you
+i want to play the game calling capital with you
+i want to play with you the game calling capital
+capital
+capitals
+the game capital
+the game capitals
+capital game
+capitals game
+start the game capital
+start capital game
+start the capital game
+start the capitals game
+start capital
+start to play capital game
+start to play the capital game
+start to play the game capitals
+start to play capitals game
+start to play the capitals game
+start to play capitals
+start to play capital
+start to play the game capital
+start to play with me the game capital
+start to play with me capital game
+start to play with me the capital game
+start to play with me the game capitals
+start to play with me capitals game
+start to play with me the capitals game
+start to play with me capitals
+start to play with me capital
+start to play with me the game calling capital
+start to play with me the game calling capitals
+play capitals
+play with me capitals
+play with me capitals game
+play with me the capitals game
+play with me the game calling capitals
+play capital
+play with me capital
+play with me capital game
+play with me the capital game
+play with me the game calling capital
+###14###
+animal
+animals
+start the game animals
+start animals game
+start the animals game
+start the game animal
+start animal game
+start the animal game
+start animal
+start animals
+guess the animal
+animal game
+animals game
+animal guess game
+animals guess game
+start to play the game animals
+start to play animals game
+start to play the animals game
+start to play the game animal
+start to play animal game
+start to play the animal game
+start to play animal
+start to play animals
+the game animal
+the game animals
+start guess the animal
+let's play guess the animal
+start guess the animal game
+start game guess the animal
+start the game guess the animal
+i want to play guess the animal
+start to play with me the game animals
+start to play with me animals game
+start to play with me the animals game
+start to play with me the game animal
+start to play with me animal game
+start to play with me the animal game
+start to play with me animal
+start to play with me animals
+play animals
+start to play with me the game calling animals
+start to play with me the game calling animal
+play with me animals
+play with me animals game
+play with me the animals game
+play with me the game calling animals
+play animal
+play with me animal
+play with me animal game
+play with me the animal game
+play with me the game calling animal
+i want to play animals
+i want to play animals game
+i want to play animals game with you
+i want to play the game animals with you
+i want to play the game calling animals with you
+i want to play with you the game calling animals
+i want to play animal
+i want to play animal game
+i want to play animal game with you
+i want to play the game animal with you
+i want to play the game calling animal with you
+i want to play with you the game calling animal
+###15###
+let's play twenty one
+start twenty one game
+start game twenty one
+start the game twenty one
+i want to play twenty one
+twenty one
+the game twenty one
+twenty one game
+start twenty one
+start to play twenty one
+start to play with me twenty one
+play twenty one
+play with me twenty one
+play with me twenty one game
+play with me the twenty one game
+play with me the game calling twenty one
+i want to play twenty one game
+i want to play twenty one game with you
+i want to play the game twenty one with you
+i want to play the game calling twenty one with you
+i want to play with you the game calling twenty one
+###16###
+Are you mortal
+are you a human
+are you human
+can you sing
+do you sing
+can you cook
+do you cook
+can you take a photo
+can you do a photo
+do you take a photo
+can you take a selfie
+can you do a selfie
+do you take a selfie
+can you eat
+do you eat
+can you drink
+do you drink
+can you get hungry
+are you getting hungry
+are you hungry
+are you angry
+do you angry
+are you sad
+do you hungry
+do you know my name
+can you say my name
+can you guess my name
+###17###
+Are you immortal
+are you a robot
+are you robot
+can you dance
+do you dance
+can you sleep
+do you sleep
+do you know english
+do you speak english
+do you know russian
+do you speak russian
+###18###
+I want you to dance
+I want you to dance right now
+dance
+start to dance
+start dance
+###19###
+come to me
+come here
+come closer to me
+###20###
+go ahead
+walk straight
+go forward
+forward
+step forward
+step to forward
+###21###
+back
+come back
+step back
+step to back
+go back
+###22###
+left
+turn left
+go left
+turn to left
+step left
+step to left
+###23###
+right
+go right
+turn right
+turn to right
+step right
+step to right
+###24###
+sleep
+you can sleep
+i want to sleep
+i want to go to sleep
+i want to go to sleep now
+i want to go to bed
+I'm going to bed
+i am going to bed
+shut down
+power off
+bye
+goodbye
+good night
+###25###
+how many languages do you know
+how many languages can you speak
+###26###
+change the language
+can you speak in other language
+can you speak in another language
+can you speak other language
+can you speak another language
+please let's change the language
+please let's speak in other language
+please let's speak in another language
+please let's speak other language
+please let's speak another language
+speak in other language
+speak in another language
+speak other language
+speak another language
+let's change the language
+let's speak in other language
+let's speak in another language
+let's speak other language
+let's speak another language
+can you change the language
+please change the language
+set the language to another
+set the language to other
+###27###
+russian
+change to russian
+change russian
+can you speak in russian
+can you speak russian
+speak in russian
+please let's speak in russian
+can you change the language to russian
+please let's speak russian
+change the language to russian
+please change the language to russian
+please speak in russian
+let's speak in russian
+let's speak russian
+set the language to russian
+set russian
+set to russian
+please let's change the language to russian
+please let's change to russian
+speak russian
+let's change the language to russian
+let's change to russian
+can you change to russian
+change the language russian
+please change to russian
+###28###
+please let's change the language to english
+please let's change to english
+please let's speak in english
+please let's speak english
+change to english
+change english
+speak in english
+speak english
+let's change the language to english
+let's change to english
+let's speak in english
+let's speak english
+can you change the language to english
+can you change to english
+change the language to english
+change the language english
+please change the language to english
+please change to english
+english
+set the language to english
+can you speak in english
+can you speak english
+set english
+set to english
+please speak in english
+please can you change the language to english
+please can you speak in english
+let's speak in English
+let's speak English
+please Let's speak in English
+please Let's speak English
+###Stop###
+i do not want
+i don't want
+I do not want to continue
+I don't want to continue
+I do not want to continue playing
+I don't want to continue playing
+I do not want to continue playing capitals
+I do not want to continue playing capital
+I do not want to continue playing animals
+I do not want to continue playing animal
+I do not want to continue playing twenty one
+I don't want to continue playing capitals
+I don't want to continue playing capital
+I don't want to continue playing animals
+I don't want to continue playing animal
+I don't want to continue playing twenty one
+please stop
+please stop the game
+please stop playing
+please stop game
+please stop playing animals
+please stop playing animal
+please stop playing capitals
+please stop playing capital
+please stop playing twenty one
+please stop animals
+please stop animal
+please stop capitals
+please stop capital
+please stop twenty one
+stop
+stop playing
+stop game
+stop playing animals
+stop playing animal
+stop playing capitals
+stop playing capital
+stop playing twenty one
+stop the game
+stop animals
+stop animal
+stop capitals
+stop capital
+stop twenty one
+i can not guess the animal
+i can not say the name of the animal
+i can not guess the name of the animal
+i can't guess the animal
+i can't say the name of the animal
+i can't guess the name of the animal
+I can not name the animal
+I can't name the animal
+I can't say the name of the capital
+I can not say the name of the capital
+I can not name the capital
+I can't name the capital
+I can not answer
+i can not give answer
+i can not give an answer
+I can not answer to that question
+I can not answer to question
+I can not answer question
+I can not give answer
+I can not give an answer
+I can't answer
+i can't give answer
+i can't give an answer
+I can't answer to that question
+I can't answer to question
+I can't answer question
+I can't give answer
+I can't give an answer
+i can not say
+i can't say
+i can not guess
+i can not say the name
+i can't guess
+i can't guess the name
+I can not say the name of the city
+I can't say the name of the city
+I can not name the city
+I can't name the city
+i do not know
+i don't know
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+ten
+eleven
+twelve
+thirteen
+fourteen
+fifteen
+sixteen
+seventeen
+eighteen
+nineteen
+twenty
+twenty one
