@@ -1,6 +1,6 @@
 import os
 from Games.Capitals import capitals
-from STT.VAD import vad
+from STT import stt
 from QA import qa
 import yaml
 import time
@@ -17,7 +17,7 @@ def get_key(val, input_dict):
 
 def toggle_language(value, languages):
     new_language = get_key(1-value, languages)
-    model = vad.preprocess(os.path.join(stt_folder, new_language))
+    model = stt.preprocess(os.path.join(stt_folder, new_language))
     return model, new_language
 
 if __name__ == "__main__":
@@ -46,30 +46,33 @@ if __name__ == "__main__":
     capitals_tts_folder = os.path.join(main_dir, capitals_tts_folder)
 
     #Preprocess voice activity detection and load STT model
-    model = vad.preprocess(os.path.join(stt_folder, language))
+    model = stt.preprocess(os.path.join(stt_folder, language))
 
     while True:
-        speech = vad.listen_audio(model)
+        speech = stt.listen_audio(model)
         print("STT result: %s" % speech)
-        resp, context = qa.response(speech, os.path.join(qa_folder, language))
-        print("Response: %s, Context: %s" % (resp, context))
-        #Response cases
-        all_files = []
-        if resp != "Sorry, I didn't get what you said.":
-            for file in os.listdir(os.path.join('/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation/En', resp)):
-                if file.endswith(".mp3"):
-                    all_files.append(os.path.join('/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation/En', resp, file))
-            play = random.choice(all_files)
-            #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
-            os.system("mpg321 %s --stereo" % play)
-        #if context == 'En': capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), vad, model)
-        #if context=='En' or context=='Ru':
-            #if context != language:
-                #model, language = toggle_language(languages.get(language), languages, main_config)
-        #if context == 'En': model, language = toggle_language(languages.get(language), languages)
+        if speech != "":
+            resp, context = qa.response(speech, os.path.join(qa_folder, language))
+            print("Response: %s, Context: %s" % (resp, context))
+            #Response cases
+            all_files = []
+            if resp != "Sorry, I didn't get what you said.":
+                for file in os.listdir(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
+                    if file.endswith(".mp3"):
+                        all_files.append(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
+                play = random.choice(all_files)
+                #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
+                os.system("mpg321 %s --stereo" % play)
+            else:
+                print("Sorry, I didn't get what you said.")
+            #if context == 'En': capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), stt, model)
+            #if context=='En' or context=='Ru':
+                #if context != language:
+                    #model, language = toggle_language(languages.get(language), languages, main_config)
+            #if context == 'En': model, language = toggle_language(languages.get(language), languages)
 
-        #if context == 'Ru':
-            #model, language = toggle_language(languages.get(language), languages)
+            #if context == 'Ru':
+                #model, language = toggle_language(languages.get(language), languages)
 
-        #if context == 'Capitals': capitals.capitals(capitals_questions_number, capitals_data_file, capitals_tts_folder, language)
-        #if context == 'Capitals': capitals.capitals(main_dir, language)
+            #if context == 'Capitals': capitals.capitals(capitals_questions_number, capitals_data_file, capitals_tts_folder, language)
+            #if context == 'Capitals': capitals.capitals(main_dir, language)
