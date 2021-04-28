@@ -48,8 +48,14 @@ if __name__ == "__main__":
     #Preprocess voice activity detection and load STT model
     model = stt.preprocess(os.path.join(stt_folder, language))
 
+    # Start audio with VAD
+    vad_audio = stt.VADAudio(aggressiveness = 3,
+                         #device=ARGS.device,
+                         input_rate=16000)
+                         #file=ARGS.file)
+
     while True:
-        speech = stt.listen_audio(model)
+        speech = stt.listen_audio(model,vad_audio)
         print("STT result: %s" % speech)
         if speech != "":
             resp, context = qa.response(speech, os.path.join(qa_folder, language))

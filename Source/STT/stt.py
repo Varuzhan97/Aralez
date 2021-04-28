@@ -28,9 +28,9 @@ class Audio(object):
         self.sample_rate = self.RATE_PROCESS
         self.block_size = int(self.RATE_PROCESS / float(self.BLOCKS_PER_SECOND))
         self.block_size_input = int(self.input_rate / float(self.BLOCKS_PER_SECOND))
-        self.pa = pyaudio.PyAudio()
+        #self.pa = pyaudio.PyAudio()
 
-        kwargs = {
+        self.kwargs = {
             'format': self.FORMAT,
             'channels': self.CHANNELS,
             'rate': self.input_rate,
@@ -42,13 +42,13 @@ class Audio(object):
         self.chunk = None
         # if not default device
         if self.device:
-            kwargs['input_device_index'] = self.device
+            self.kwargs['input_device_index'] = self.device
         elif file is not None:
             self.chunk = 320
             self.wf = wave.open(file, 'rb')
 
-        self.stream = self.pa.open(**kwargs)
-        self.stream.start_stream()
+        #self.stream = self.pa.open(**kwargs)
+        #self.stream.start_stream()
 
     def resample(self, data, input_rate):
         """
@@ -150,13 +150,10 @@ def preprocess(model_path):
     model.enableExternalScorer(os.path.join(model_path, 'model.scorer'))
     return model
 
-def listen_audio(model, rate = 16000, vad_aggressiveness = 3):
-    # Start audio with VAD
-    vad_audio = VADAudio(aggressiveness = vad_aggressiveness,
-                         #device=ARGS.device,
-                         input_rate=rate)
-                         #file=ARGS.file)
-
+def listen_audio(model, vad_audio, rate = 16000, vad_aggressiveness = 3):
+    vad_audio.pa = pyaudio.PyAudio()
+    vad_audio.stream = vad_audio.pa.open(**vad_audio.kwargs)
+    vad_audio.stream.start_stream()
     frames = vad_audio.vad_collector()
     # Stream from microphone to DeepSpeech using VAD
     spinner = Halo(spinner='line')
@@ -172,6 +169,11 @@ def listen_audio(model, rate = 16000, vad_aggressiveness = 3):
             #if ARGS.savewav:
                 #vad_audio.write_wav(os.path.join(ARGS.savewav, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav")), wav_data)
                 #wav_data = bytearray()
+            ################################################
+            vad_audio.stream.stop_stream()
+            vad_audio.stream.close()
+            vad_audio.pa.terminate()
+            #@####################################################
             text = model.stt(np.frombuffer(wav_data, np.int16))
             wav_data = bytearray()
             return text
