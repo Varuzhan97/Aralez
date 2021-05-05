@@ -63,9 +63,9 @@ if __name__ == "__main__":
             #Response cases
             all_files = []
             if resp != "Sorry, I didn't get what you said.":
-                for file in os.listdir(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
+                for file in os.listdir(os.path.join('/home/work/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
                     if file.endswith(".mp3"):
-                        all_files.append(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
+                        all_files.append(os.path.join('/home/work/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
                 play = random.choice(all_files)
                 #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
                 os.system("mpg321 %s --stereo" % play)
