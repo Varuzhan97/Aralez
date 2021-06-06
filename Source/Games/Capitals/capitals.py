@@ -4,7 +4,7 @@ import os
 import time
 #from STT.VAD import vad
 
-def ask(questions, correct_speech, wrong_speech, data_file_yaml, vad, model):
+def ask(questions, correct_speech, wrong_speech, data_file_yaml, stt, model, vad_audio):
     score = 0
     for question in questions:
         time.sleep(1)
@@ -12,7 +12,7 @@ def ask(questions, correct_speech, wrong_speech, data_file_yaml, vad, model):
         correct_answer = list()
         correct_answer.append(data_file_yaml.get(os.path.basename(question)[0:-4]))
         print("type:", correct_answer)
-        answer = vad.listen_audio(model)
+        answer = stt.listen_audio(model, vad_audio)
         correct_answer = [x.lower() for x in correct_answer]
         if (answer in correct_answer):
             speech = random.choice(correct_speech)
@@ -25,7 +25,7 @@ def ask(questions, correct_speech, wrong_speech, data_file_yaml, vad, model):
             os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
     return score
 
-def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folder, vad, model):
+def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folder, stt, model, vad_audio):
     data_file =  open(os.path.join(capitals_data_folder, "data.yaml"), 'r')
     data_file_yaml = yaml.full_load(data_file)
 
@@ -71,7 +71,7 @@ def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folde
     os.system("mpg321 %s --stereo" % ('"' + start_speech + '"'))
     time.sleep(1)
     os.system("mpg321 %s --stereo" % ('"' + prequestion_speech + '"'))
-    score = ask(question_speech, correct_speech, wrong_speech, data_file_yaml, vad, model)
+    score = ask(question_speech, correct_speech, wrong_speech, data_file_yaml, stt, model, vad_audio)
     print("Score:", score)
     if 0 <= score <= 2:
         time.sleep(1)

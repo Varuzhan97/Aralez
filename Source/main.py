@@ -1,5 +1,6 @@
 import os
 from Games.Capitals import capitals
+from Games.Twenty_one import twenty_one
 from STT import stt
 from QA import qa
 import yaml
@@ -45,6 +46,9 @@ if __name__ == "__main__":
     capitals_tts_folder = main_config["Games"]["Capitals"]["TTS Folder"]
     capitals_tts_folder = os.path.join(main_dir, capitals_tts_folder)
 
+    twenty_one_tts_folder = main_config["Games"]["Twenty-one"]["TTS Folder"]
+    twenty_one_tts_folder = os.path.join(main_dir, twenty_one_tts_folder)
+
     #Preprocess voice activity detection and load STT model
     model = stt.preprocess(os.path.join(stt_folder, language))
 
@@ -59,26 +63,53 @@ if __name__ == "__main__":
         print("STT result: %s" % speech)
         if speech != "":
             resp, context = qa.response(speech, os.path.join(qa_folder, language))
-            print("Response: %s, Context: %s" % (resp, context))
             #Response cases
             all_files = []
             if resp != "Sorry, I didn't get what you said.":
-                for file in os.listdir(os.path.join('~/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
+                if resp == 26:
+                    for file in os.listdir(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
+                        if file.endswith(".mp3"):
+                            all_files.append(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
+
+                    play = random.choice(all_files)
+                    #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
+                    os.system("mpg321 %s --stereo" % play)
+
+                    model, language = toggle_language(languages.get(language), languages)
+                    continue
+                #if resp == "18":
+                    #Start to dance
+                    #continue
+                if resp == "13":
+                    for file in os.listdir(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
+                        if file.endswith(".mp3"):
+                            all_files.append(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
+
+                    play = random.choice(all_files)
+                    os.system("mpg321 %s --stereo" % play)
+                    capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), stt, model, vad_audio)
+                    continue
+                if resp == "15":
+                    for file in os.listdir(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
+                        if file.endswith(".mp3"):
+                            all_files.append(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
+
+                    play = random.choice(all_files)
+                    os.system("mpg321 %s --stereo" % play)
+                    twenty_one.twenty_one(os.path.join(twenty_one_tts_folder, language), stt, model, vad_audio)
+                    continue
+                #if resp == "27":
+                    #Check current language. If it is RU play inform speech, else change to RU and play change speech
+                    #continue
+                #if resp == "28":
+                    #Check current language. If it is EN play inform speech, else change to EN and play change speech
+                    #continue
+                for file in os.listdir(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp)):
                     if file.endswith(".mp3"):
-                        all_files.append(os.path.join('~/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
+                        all_files.append(os.path.join('/home/varuzhan/Desktop/Aralez/Source/TTS/Conversation/En', resp, file))
+
                 play = random.choice(all_files)
                 #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
                 os.system("mpg321 %s --stereo" % play)
             else:
                 print("Sorry, I didn't get what you said.")
-            #if context == 'En': capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), stt, model)
-            #if context=='En' or context=='Ru':
-                #if context != language:
-                    #model, language = toggle_language(languages.get(language), languages, main_config)
-            #if context == 'En': model, language = toggle_language(languages.get(language), languages)
-
-            #if context == 'Ru':
-                #model, language = toggle_language(languages.get(language), languages)
-
-            #if context == 'Capitals': capitals.capitals(capitals_questions_number, capitals_data_file, capitals_tts_folder, language)
-            #if context == 'Capitals': capitals.capitals(main_dir, language)

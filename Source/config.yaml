@@ -6,6 +6,8 @@ Games:
     Questions Number: 10
     Data Folder: "Games/Capitals/Data" #YAML file that contains all countries and capitals
     TTS Folder: "TTS/Capitals" #TTS folder that contains .mp3 speech files for the game
+  Twenty-one:
+    TTS Folder: "TTS/Twenty-one" #TTS folder that contains .mp3 speech files for the game
 STT:
   Model Folder: "STT/Model" #STT models folder
 QA:
