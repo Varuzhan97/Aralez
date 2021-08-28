@@ -32,8 +32,6 @@ def bag_of_words(s, words):
 
 
 def response(input, model_path):
-    current_dir = '/home/varuzhan/Desktop/***PROJECT***/Oberon/QA'
-
     with open(os.path.join(model_path, 'intents.json')) as file:
         data = json.load(file)
 
@@ -61,16 +59,16 @@ def response(input, model_path):
     if results[results_index] > 0.95:
         for tg in data["intents"]:
             if tg['tag'] == tag:
+                resp = tg['tag']
                 #responses = tg['responses']
                 #context = tg['context_set']
                 #print('Tag--->', tg['tag'])
                 #print('Information--->',tg['information'])
-                resp = tg['tag']
-                info = tg['information']
+                #info = tg['information']
         #resp = random.choice(responses)
     else:
         #print('Sorry, I didn\'t get what you said.')
-        resp = "Sorry, I didn't get what you said."
-        info = -1
-    return resp, info
+        resp = -1
+        #info = -1
+    return resp
     #return resp, context

@@ -10,6 +10,7 @@ pip3 install scipy==0.19
 
 sudo apt-get install -y mpg321
 sudo apt install git python3-pip python3-scipy python3-numpy python3-pyaudio libatlas3-base
+sudo apt install python3-pip python3-scipy python3-numpy python3-pyaudio libatlas3-base
 
 python 3 version 3.6.9
 pip3 version 9.0.1cd source

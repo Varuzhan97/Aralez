@@ -3,8 +3,8 @@ import random
 import os
 import time
 import random
-#from STT.VAD import vad
 
+#Convert number name to digit
 def strings_to_numbers(argument):
     switcher = {
         "zero": 0,
@@ -30,37 +30,57 @@ def strings_to_numbers(argument):
         "twenty": 20,
         "twenty one": 21,
     }
-
-    # get() method of dictionary data type returns
-    # value of passed argument if it is present
-    # in dictionary otherwise second argument will
-    # be assigned as default value of passed argument
+    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
+    #Otherwise second argument will be assigned as default value of passed argument
     return switcher.get(argument, -1)
+
+#Choose N audio clips from path
+def choose_sample(samples_path, folder, speech_number):
+    temp_result_speech = random.sample(os.listdir(os.path.join(samples_path, folder)), speech_number)
+    result_speech = []
+    for speech in temp_result_speech:
+        result_speech.append(os.path.join(samples_path, folder, speech))
+    if len(result_speech) == 1:
+        result_speech = result_speech[0]
+        return result_speech
+    else:
+        return result_speech
+
+#Choose all audio clips from path
+def choose_all_sample(samples_path, folder):
+    temp_result_speech = os.listdir(os.path.join(samples_path, folder))
+    result_speech = []
+    for speech in temp_result_speech:
+        result_speech.append(os.path.join(samples_path, folder, speech))
+    return result_speech
 
 def process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, model, vad_audio):
     while True:
-        #answer = vad.listen_audio(model)
-        #answer = input('---| Enter Number ---> ')
         answer = stt.listen_audio(model, vad_audio)
-        #remove spaces and make lowercase
-        #answer = answer.replace(" ", "")
-        answer_number = strings_to_numbers(answer)
-        print("this is: ", answer_number)
-
-        if (answer_number < current_number+1) or (answer_number > current_number+range_limit):
-            time.sleep(1)
-            speech = random.choice(wrong_speech)
-            os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
-            print('---| Enter again |---', flush=True)
-            #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
+        ##################################################3
+        if answer == '':
             continue
-        break
+        if answer == 'stop' or answer == 'stop the game' or answer == 'the game' or answer == 'one the game' or answer == 'game':
+            return -1
+        if answer == 'one' or answer == 'two' or answer == 'three':
+            ##################################################
+            answer_number = strings_to_numbers(answer)
+            print("this is: ", answer_number)
+            if (answer_number < current_number+1) or (answer_number > current_number+range_limit):
+                time.sleep(1)
+                speech = random.choice(wrong_speech)
+                os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
+                #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
+                continue
+            break
+        ###################################################
+
     time.sleep(1)
     speech = random.choice(correct_speech)
     os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
     return answer_number
 
-def generate_number(current_number, range_limit, numbers_speech):
+def generate_number(current_number, range_limit, numbers_speech, think_time_speech, think_time_end_speech):
     if (current_number+range_limit) >= 21:
         generated_number = 21
         time.sleep(1)
@@ -72,48 +92,37 @@ def generate_number(current_number, range_limit, numbers_speech):
         print("Number: ", generated_number)
         time.sleep(1)
         os.system("mpg321 %s --stereo" % ('"' + os.path.join(numbers_speech, str(generated_number) + ".mp3") + '"'))
+
+        time.sleep(1)
+        os.system("mpg321 %s --stereo" % ('"' + think_time_speech + '"'))
+        time.sleep(5)
+        os.system("mpg321 %s --stereo" % ('"' + think_time_end_speech + '"'))
         return generated_number
 
 def twenty_one(twenty_one_tts_folder, stt, model, vad_audio):
-    intro_speech = os.path.join(twenty_one_tts_folder, "Intro", "intro.mp3")
 
-    first_start_speech = os.path.join(twenty_one_tts_folder, "First Start")
+    start_speech = choose_sample(twenty_one_tts_folder, "0", 1)
+    first_start_speech = choose_all_sample(twenty_one_tts_folder, "1")
+    first_start_speech.sort()
+    prequestion_speech = choose_all_sample(twenty_one_tts_folder, "2")
+    numbers_speech = choose_all_sample(twenty_one_tts_folder, "3")
+    correct_speech = choose_all_sample(twenty_one_tts_folder, "4")
+    wrong_speech = choose_all_sample(twenty_one_tts_folder, "5")
+    winner_speech = choose_sample(twenty_one_tts_folder, "6", 1)
+    loser_speech = choose_sample(twenty_one_tts_folder, "7", 1)
 
-    temp_prequestion_speech = os.listdir(os.path.join(twenty_one_tts_folder, "Prequestion"))
-    prequestion_speech = []
-    for speech in temp_prequestion_speech:
-        prequestion_speech.append(os.path.join(twenty_one_tts_folder, "Prequestion", speech))
-
-
-    numbers_speech = os.path.join(twenty_one_tts_folder, "Numbers")
-
-    temp_correct_speech = os.listdir(os.path.join(twenty_one_tts_folder, "Correct"))
-    correct_speech = []
-    for speech in temp_correct_speech:
-        correct_speech.append(os.path.join(twenty_one_tts_folder, "Correct", speech))
-
-    temp_wrong_speech = os.listdir(os.path.join(twenty_one_tts_folder, "Wrong"))
-    wrong_speech = []
-    for speech in temp_wrong_speech:
-        wrong_speech.append(os.path.join(twenty_one_tts_folder, "Wrong", speech))
-
-    winner_speech = random.choice(os.listdir(os.path.join(twenty_one_tts_folder, "Winner")))
-    winner_speech = os.path.join(twenty_one_tts_folder, winner_speech)
-
-    loser_speech = random.choice(os.listdir(os.path.join(twenty_one_tts_folder, "Loser")))
-    loser_speech = os.path.join(twenty_one_tts_folder, loser_speech)
+    think_time_speech = choose_sample(twenty_one_tts_folder, "8", 1)
+    think_time_end_speech = choose_sample(twenty_one_tts_folder, "9", 1)
+    stop_speech = choose_sample(twenty_one_tts_folder, "10", 1)
 
     time.sleep(1)
-    #os.system("mpg321 %s --stereo" % ('"' + intro_speech + '"'))
+    os.system("mpg321 %s --stereo" % ('"' + start_speech + '"'))
 
-    #################################################################################################
-    # 0 -> robot | 1 -> child
+    # Winner/Starter 0 -> robot | 1 -> child
     winner = 0
     current_number = -1
     range_limit = 3
-
     random.seed(time.clock())
-
     # Choose first to start // 0 -> robot | 1 -> child
     first_start = random.randint(0, 1)
     print(first_start)
@@ -125,12 +134,16 @@ def twenty_one(twenty_one_tts_folder, stt, model, vad_audio):
         if first_start:
             # Get answer
             current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, model, vad_audio)
+            if current_number == -1:
+                time.sleep(1)
+                os.system("mpg321 %s --stereo" % ('"' + stop_speech + '"'))
+                return
             winner = 1
             # Generate a random integer N such that (current_number+1) <= N <= (current_number+range_limit)
             speech = random.choice(prequestion_speech)
             time.sleep(1)
             os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
-            current_number = generate_number(current_number, range_limit, numbers_speech)
+            current_number = generate_number(current_number, range_limit, numbers_speech, think_time_speech, think_time_end_speech)
             winner = 0
             print ("Current: ", current_number)
         else:
@@ -138,10 +151,13 @@ def twenty_one(twenty_one_tts_folder, stt, model, vad_audio):
             speech = random.choice(prequestion_speech)
             time.sleep(1)
             os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
-            current_number = generate_number(current_number, range_limit, numbers_speech)
+            current_number = generate_number(current_number, range_limit, numbers_speech, think_time_speech, think_time_end_speech)
             winner = 0
             # Get answer
             current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, model, vad_audio)
+            if current_number == -1:
+                os.system("mpg321 %s --stereo" % ('"' + stop_speech + '"'))
+                return
             winner = 1
             print ("Current: ", current_number)
 

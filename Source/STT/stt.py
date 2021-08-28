@@ -147,7 +147,10 @@ class VADAudio(Audio):
 def preprocess(model_path):
     # Load DeepSpeech model
     model = deepspeech.Model(os.path.join(model_path, 'model.tflite'))
-    model.enableExternalScorer(os.path.join(model_path, 'model.scorer'))
+    return model
+
+def load_scorer(model, scorer_path, scorer_name):
+    model.enableExternalScorer(os.path.join(scorer_path, scorer_name))
     return model
 
 def listen_audio(model, vad_audio, rate = 16000, vad_aggressiveness = 3):

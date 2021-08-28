@@ -9,6 +9,8 @@ Games:
   Twenty-one:
     TTS Folder: "TTS/Twenty-one" #TTS folder that contains .mp3 speech files for the game
 STT:
-  Model Folder: "STT/Model" #STT models folder
+  Model Folder: "STT/Model" #STT models and scorers folder
 QA:
   Model Folder: "QA/Model" #QA models folder
+TTS:
+  Clips Folder: "TTS/Conversation" #STT models folder
