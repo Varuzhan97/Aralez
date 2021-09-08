@@ -96,9 +96,15 @@ class Audio(object):
 class VADAudio(Audio):
     """Filter & segment audio with voice activity detection."""
 
-    def __init__(self, aggressiveness=3, device=None, input_rate=None, file=None):
+    def __init__(self, aggressiveness=3, input_rate=None, device=None, file=None):
         super().__init__(device=device, input_rate=input_rate, file=file)
         self.vad = webrtcvad.Vad(aggressiveness)
+
+    def set_scorer(self, scorer_path, scorer_name):
+        self.model.enableExternalScorer(os.path.join(scorer_path, scorer_name))
+
+    def set_model(self, model_path, model_name):
+        self.model = deepspeech.Model(os.path.join(model_path, model_name))
 
     def frame_generator(self):
         """Generator that yields all audio frames from microphone."""
@@ -144,16 +150,7 @@ class VADAudio(Audio):
                     yield None
                     ring_buffer.clear()
 
-def preprocess(model_path):
-    # Load DeepSpeech model
-    model = deepspeech.Model(os.path.join(model_path, 'model.tflite'))
-    return model
-
-def load_scorer(model, scorer_path, scorer_name):
-    model.enableExternalScorer(os.path.join(scorer_path, scorer_name))
-    return model
-
-def listen_audio(model, vad_audio, rate = 16000, vad_aggressiveness = 3):
+def listen_audio(vad_audio, rate = 16000, vad_aggressiveness = 3):
     vad_audio.pa = pyaudio.PyAudio()
     vad_audio.stream = vad_audio.pa.open(**vad_audio.kwargs)
     vad_audio.stream.start_stream()
@@ -177,7 +174,7 @@ def listen_audio(model, vad_audio, rate = 16000, vad_aggressiveness = 3):
             vad_audio.stream.close()
             vad_audio.pa.terminate()
             #@####################################################
-            text = model.stt(np.frombuffer(wav_data, np.int16))
+            text = vad_audio.model.stt(np.frombuffer(wav_data, np.int16))
             wav_data = bytearray()
             return text
 

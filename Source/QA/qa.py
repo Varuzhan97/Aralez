@@ -1,74 +1,150 @@
-import nltk
-from nltk.stem.lancaster import LancasterStemmer
-stemmer = LancasterStemmer()
+#Convert sentence string to corresponding ID
+def strings_to_id(argument, language_id):
+    switcher_0 = {
+        "aralez": 0,
+        "hello": 1,
+        "what is your name": 2,
+        "what is the meaning of your name": 3,
+        "what means your name": 3,
+        "introduce yourself": 4,
+        "who are you": 4,
+        "what is your nationality": 5,
+        "where are you from": 6,
+        "what is your motherland": 6,
+        "how old are you": 7,
+        "what is your gender": 8,
+        "are you a boy or a girl": 8,
+        "are you a boy": 8,
+        "are you a girl": 8,
+        "do you have friends": 9,
+        "am i your friend": 9,
+        "are you my friend": 9,
+        "how are you": 10,
+        "what can you do": 11,
+        "what games can you play": 12,
+        "how many games can you play": 12,
+        "can you play games": 12,
+        "let's play a game": 13,
+        "i want to play a game": 13,
+        "let's play capitals": 14,
+        "i want to play capitals": 14,
+        "let's play twenty one": 15,
+        "i want to play twenty one": 15,
+        "are you a human": 16,
+        "can you sing": 16,
+        "can you cook": 16,
+        "can you take a photo": 16,
+        "can you take a selfie": 16,
+        "can you eat": 16,
+        "can you drink": 16,
+        "can you get hungry": 16,
+        "are you hungry": 16,
+        "are you sad": 16,
+        "do you know my name": 16,
+        "are you okay": 17,
+        "are you a robot": 17,
+        "can you dance": 17,
+        "can you sleep": 17,
+        "do you speak english": 17,
+        "do you speak russian": 17,
+        "dance": 18,
+        "start to dance": 18,
+        "come here": 19,
+        "go forward": 20,
+        "go back": 21,
+        "go left": 22,
+        "go right": 23,
+        "sleep": 24,
+        "you can sleep": 24,
+        "i want to sleep": 24,
+        "shut down": 24,
+        "power off": 24,
+        "bye": 24,
+        "goodbye": 24,
+        "how many languages do you know": 25,
+        "switch the language": 26,
+        "change the language": 26,
+        "speak in english": 27,
+        "switch to english": 27,
+        "speak in russian": 28,
+        "switch to russian": 28,
+    }
+    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
+    #Otherwise second argument will be assigned as default value of passed argument
 
-import numpy
-import tflearn
-import tensorflow
-#tensorflow.logging.set_verbosity(tensorflow.logging.ERROR)
-tensorflow.compat.v1.logging.set_verbosity(tensorflow.compat.v1.logging.ERROR)
-import random
-import json
-import pickle
-import os
+    switcher_1 = {
+        "аралез": 0,
+        "привет": 1,
+        "как тебя зовут": 2,
+        "что означает твое имя": 3,
+        "расскажи о себе": 4,
+        "кто ты": 4,
+        "какая у тебя нация": 5,
+        "откуда ты": 6,
+        "какая твоя родина": 6,
+        "сколько тебе лет": 7,
+        "какой твой пол": 8,
+        "ты мальчик или девочка": 8,
+        "ты мальчик": 8,
+        "ты девушка": 8,
+        "у тебя есть друзья": 9,
+        "я твой друг": 9,
+        "ты мой друг": 9,
+        "как ты": 10,
+        "что ты можешь сделать": 11,
+        "что ты умеешь делать": 11,
+        "ты можешь играть в игры": 12,
+        "во сколько игр ты можешь сыграть": 12,
+        "в какие игры ты можешь играть": 12,
+        "давай сыграем в игру": 13,
+        "я хочу поиграть в игру": 13,
+        "давай сыграем в столицы": 14,
+        "я хочу поиграть в столицы": 14,
+        "давай сыграем в двадцать один": 15,
+        "я хочу поиграть в двадцать один": 15,
+        "ты человек": 16,
+        "ты умеешь петь": 16,
+        "ты умеешь готовить": 16,
+        "ты можешь сделать фото": 16,
+        "ты можешь сделать селфи": 16,
+        "ты можешь есть": 16,
+        "ты можешь пить": 16,
+        "ты можешь проголодаться": 16,
+        "ты голоден": 16,
+        "ты грустный": 16,
+        "ты знаешь мое имя": 16,
+        "ты в порядке": 17,
+        "ты робот": 17,
+        "ты можешь танцевать": 17,
+        "ты можешь спать": 17,
+        "ты говоришь по английски": 17,
+        "ты говоришь по русски": 17,
+        "танцуй": 18,
+        "начни танцевать": 18,
+        "иди сюда": 19,
+        "иди вперед": 20,
+        "иди назад": 21,
+        "иди налево": 22,
+        "иди направо": 23,
+        "пока": 24,
+        "до свидания": 24,
+        "ты можешь поспать": 24,
+        "я хочу поспать": 24,
+        "выключайся": 24,
+        "выключи питание": 24,
+        "сколько языков ты знаешь": 25,
+        "переключи язык": 26,
+        "смени язык": 26,
+        "говори по русски": 27,
+        "переключись на русский": 27,
+        "говори по английски": 28,
+        "переключись на английский": 28,
+    }
+    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
+    #Otherwise second argument will be assigned as default value of passed argument
 
-try:
-    nltk.download('punkt')
-except:
-    pass
-
-def bag_of_words(s, words):
-    bag = [0 for _ in range(len(words))]
-
-    s_words = nltk.word_tokenize(s)
-    s_words = [stemmer.stem(word.lower()) for word in s_words]
-
-    for se in s_words:
-        for i, w in enumerate(words):
-            if w == se:
-                bag[i] = 1
-
-    return numpy.array(bag)
-
-
-def response(input, model_path):
-    with open(os.path.join(model_path, 'intents.json')) as file:
-        data = json.load(file)
-
-    with open(os.path.join(model_path, 'data.pickle'), "rb") as f:
-        words, labels, training, output = pickle.load(f)
-
-    #tensorflow.reset_default_graph()
-    tensorflow.compat.v1.reset_default_graph()
-
-    net = tflearn.input_data(shape=[None, len(training[0])])
-    net = tflearn.fully_connected(net, 8)
-    net = tflearn.fully_connected(net, 8)
-    net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
-    net = tflearn.regression(net)
-
-    model = tflearn.DNN(net)
-    model.load(os.path.join(model_path, 'model.tflearn'))
-    ##############################################################################3
-    print("Start talking with the bot (type quit to stop)!")
-
-    results = model.predict([bag_of_words(input, words)])[0]
-    results_index = numpy.argmax(results)
-    tag = labels[results_index]
-
-    if results[results_index] > 0.95:
-        for tg in data["intents"]:
-            if tg['tag'] == tag:
-                resp = tg['tag']
-                #responses = tg['responses']
-                #context = tg['context_set']
-                #print('Tag--->', tg['tag'])
-                #print('Information--->',tg['information'])
-                #info = tg['information']
-        #resp = random.choice(responses)
-    else:
-        #print('Sorry, I didn\'t get what you said.')
-        resp = -1
-        #info = -1
-    return resp
-    #return resp, context
+    if language_id == "0":
+        return switcher_0.get(argument, -1)
+    if language_id == "1":
+        return switcher_1.get(argument, -1)
+    return -1

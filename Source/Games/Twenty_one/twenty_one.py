@@ -34,141 +34,128 @@ def strings_to_numbers(argument):
     #Otherwise second argument will be assigned as default value of passed argument
     return switcher.get(argument, -1)
 
-#Choose N audio clips from path
-def choose_sample(samples_path, folder, speech_number):
-    temp_result_speech = random.sample(os.listdir(os.path.join(samples_path, folder)), speech_number)
-    result_speech = []
-    for speech in temp_result_speech:
-        result_speech.append(os.path.join(samples_path, folder, speech))
-    if len(result_speech) == 1:
-        result_speech = result_speech[0]
-        return result_speech
+#Function to load and play one random or specific tts clip from directory
+def load_play_tts_clip(tts_folder, specific = None, stop_time = 1):
+    #Timer for a short stop befor speech
+    time.sleep(int(stop_time))
+    if specific is not None:
+        play = os.path.join(tts_folder, specific + ".mp3")
+        os.system("mpg321 %s --stereo" % ('"' + play + '"'))
     else:
-        return result_speech
+        all_files = []
+        for file in os.listdir(tts_folder):
+            if file.endswith(".mp3"):
+                all_files.append(os.path.join(tts_folder, file))
+        play = random.choice(all_files)
+        os.system("mpg321 %s --stereo" % ('"' + play + '"'))
 
-#Choose all audio clips from path
-def choose_all_sample(samples_path, folder):
-    temp_result_speech = os.listdir(os.path.join(samples_path, folder))
-    result_speech = []
-    for speech in temp_result_speech:
-        result_speech.append(os.path.join(samples_path, folder, speech))
-    return result_speech
+#Function to get player speech
+def process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
+    #Think time and ending speeches
+    load_play_tts_clip(think_time_speech)
+    #Timer for a 5 seconds think time
+    time.sleep(5)
+    load_play_tts_clip(think_time_end_speech)
 
-def process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, model, vad_audio):
+    #Get and validate answer
     while True:
-        answer = stt.listen_audio(model, vad_audio)
-        ##################################################3
+        answer = stt.listen_audio(vad_audio)
         if answer == '':
             continue
-        if answer == 'stop' or answer == 'stop the game' or answer == 'the game' or answer == 'one the game' or answer == 'game':
+        if answer == 'stop' or answer == 'stop the game':
             return -1
-        if answer == 'one' or answer == 'two' or answer == 'three':
-            ##################################################
-            answer_number = strings_to_numbers(answer)
-            print("this is: ", answer_number)
-            if (answer_number < current_number+1) or (answer_number > current_number+range_limit):
-                time.sleep(1)
-                speech = random.choice(wrong_speech)
-                os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
-                #os.system("mpg321 %s --stereo" % ('"' + os.path.join("/home/varuzhan/Desktop/***PROJECT***/Oberon/TTS/Conversation", language, resp) + '"'))
-                continue
-            break
-        ###################################################
-
-    time.sleep(1)
-    speech = random.choice(correct_speech)
-    os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
+        #if answer == 'one' or answer == 'two' or answer == 'three':
+        answer_number = strings_to_numbers(answer)
+        print("this is: ", answer_number)
+        #If number is out if range listen again, else break
+        if (answer_number < current_number+1) or (answer_number > current_number+range_limit):
+            load_play_tts_clip(wrong_speech)
+            continue
+        break
+    load_play_tts_clip(correct_speech)
     return answer_number
 
-def generate_number(current_number, range_limit, numbers_speech, think_time_speech, think_time_end_speech):
+#Function to generate robot number
+def generate_number(current_number, range_limit, numbers_speech):
+    #If the next number can be in range of [19,21] then return 21
     if (current_number+range_limit) >= 21:
         generated_number = 21
-        time.sleep(1)
-        os.system("mpg321 %s --stereo" % ('"' + os.path.join(numbers_speech, str(generated_number) + ".mp3") + '"'))
+        load_play_tts_clip(numbers_speech, specific = str(generated_number))
         return generated_number
     else:
         generated_number = random.randint(current_number+1, current_number+range_limit)
         print("Range: ", current_number+1, current_number+range_limit)
         print("Number: ", generated_number)
-        time.sleep(1)
-        os.system("mpg321 %s --stereo" % ('"' + os.path.join(numbers_speech, str(generated_number) + ".mp3") + '"'))
-
-        time.sleep(1)
-        os.system("mpg321 %s --stereo" % ('"' + think_time_speech + '"'))
-        time.sleep(5)
-        os.system("mpg321 %s --stereo" % ('"' + think_time_end_speech + '"'))
+        print("aaaaaaaaaaaaa: ", numbers_speech)
+        load_play_tts_clip(numbers_speech, specific = str(generated_number))
         return generated_number
 
-def twenty_one(twenty_one_tts_folder, stt, model, vad_audio):
+def player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
+    print("Range: ", current_number+1, current_number+range_limit)
+    # Get answer with VAD
+    current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+    #Check for STOP SIGNAL
+    if current_number == -1:
+        load_play_tts_clip(stop_speech)
+        return -1
+    #Check for WINNER SIGNAL
+    if current_number == 21:
+        load_play_tts_clip(winner_speech)
+        return 1
+    return current_number
 
-    start_speech = choose_sample(twenty_one_tts_folder, "0", 1)
-    first_start_speech = choose_all_sample(twenty_one_tts_folder, "1")
-    first_start_speech.sort()
-    prequestion_speech = choose_all_sample(twenty_one_tts_folder, "2")
-    numbers_speech = choose_all_sample(twenty_one_tts_folder, "3")
-    correct_speech = choose_all_sample(twenty_one_tts_folder, "4")
-    wrong_speech = choose_all_sample(twenty_one_tts_folder, "5")
-    winner_speech = choose_sample(twenty_one_tts_folder, "6", 1)
-    loser_speech = choose_sample(twenty_one_tts_folder, "7", 1)
+def robot_answer(current_number, range_limit, prequestion_speech, numbers_speech, loser_speech):
+    # Generate a random integer N such that (current_number+1) <= N <= (current_number+range_limit)
+    load_play_tts_clip(prequestion_speech)
+    current_number = generate_number(current_number, range_limit, numbers_speech)
+    #Check for WINNER SIGNAL
+    if current_number == 21:
+        load_play_tts_clip(loser_speech)
+        return 1
+    print ("Current: ", current_number)
+    return current_number
 
-    think_time_speech = choose_sample(twenty_one_tts_folder, "8", 1)
-    think_time_end_speech = choose_sample(twenty_one_tts_folder, "9", 1)
-    stop_speech = choose_sample(twenty_one_tts_folder, "10", 1)
+def twenty_one(twenty_one_tts_folder, stt, vad_audio):
+    #Configure TTS speech audio clips paths
+    #twenty_one_tts_folder is a full path and contains language ID too
+    first_start_speech = os.path.join(twenty_one_tts_folder, "1")
+    prequestion_speech = os.path.join(twenty_one_tts_folder, "2")
+    numbers_speech = os.path.join(twenty_one_tts_folder, "3")
+    correct_speech = os.path.join(twenty_one_tts_folder, "4")
+    wrong_speech = os.path.join(twenty_one_tts_folder, "5")
+    winner_speech = os.path.join(twenty_one_tts_folder, "6")
+    loser_speech = os.path.join(twenty_one_tts_folder, "7")
+    think_time_speech = os.path.join(twenty_one_tts_folder, "8")
+    think_time_end_speech = os.path.join(twenty_one_tts_folder, "9")
+    stop_speech = os.path.join(twenty_one_tts_folder, "10")
 
-    time.sleep(1)
-    os.system("mpg321 %s --stereo" % ('"' + start_speech + '"'))
-
-    # Winner/Starter 0 -> robot | 1 -> child
-    winner = 0
+    #Game starts from -1
     current_number = -1
     range_limit = 3
     random.seed(time.clock())
-    # Choose first to start // 0 -> robot | 1 -> child
+    #Choose first to start // 0 -> robot | 1 -> child
     first_start = random.randint(0, 1)
-    print(first_start)
+    print("sssssssssssssssssssssssss", first_start, first_start_speech, str(first_start))
 
-    time.sleep(1)
-    os.system("mpg321 %s --stereo" % ('"' + os.path.join(twenty_one_tts_folder, "First Start", str(first_start) + ".mp3") + '"'))
-
+    load_play_tts_clip(first_start_speech, specific = str(first_start))
     while True:
+        #If starts child
         if first_start:
-            # Get answer
-            current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, model, vad_audio)
-            if current_number == -1:
-                time.sleep(1)
-                os.system("mpg321 %s --stereo" % ('"' + stop_speech + '"'))
+            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+            #If returned STOP SIGNAL or WINNER SIGNAL
+            if current_number == -1 or current_number == 1:
                 return
-            winner = 1
-            # Generate a random integer N such that (current_number+1) <= N <= (current_number+range_limit)
-            speech = random.choice(prequestion_speech)
-            time.sleep(1)
-            os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
-            current_number = generate_number(current_number, range_limit, numbers_speech, think_time_speech, think_time_end_speech)
-            winner = 0
-            print ("Current: ", current_number)
+            current_number = robot_answer(current_number, range_limit, prequestion_speech, numbers_speech, loser_speech)
+            #If returned WINNER SIGNAL
+            if current_number == 1:
+                return
         else:
-            # Generate a random integer N such that (current_number+1) <= N <= (current_number+range_limit)
-            speech = random.choice(prequestion_speech)
-            time.sleep(1)
-            os.system("mpg321 %s --stereo" % ('"' + speech + '"'))
-            current_number = generate_number(current_number, range_limit, numbers_speech, think_time_speech, think_time_end_speech)
-            winner = 0
-            # Get answer
-            current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, model, vad_audio)
-            if current_number == -1:
-                os.system("mpg321 %s --stereo" % ('"' + stop_speech + '"'))
+            current_number = robot_answer(current_number, range_limit, prequestion_speech, numbers_speech, loser_speech)
+            #If returned WINNER SIGNAL
+            if current_number == 1:
                 return
-            winner = 1
-            print ("Current: ", current_number)
-
-        if current_number == 21:
-            print("Winner is:", winner)
-            if winner == 0:
-                time.sleep(1)
-                os.system("mpg321 %s --stereo" % ('"' + loser_speech + '"'))
-            else:
-                time.sleep(1)
-                os.system("mpg321 %s --stereo" % ('"' + winner_speech + '"'))
-            break
-
-    return winner
+            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+            #If returned STOP SIGNAL or WINNER SIGNAL
+            if current_number == -1 or current_number == 1:
+                return
+    return 0
