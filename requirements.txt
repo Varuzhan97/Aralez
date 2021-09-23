@@ -11,3 +11,5 @@ sudo apt install git python3-pip python3-pyaudio libatlas3-base
 
 python 3 version 3.6.9
 pip3 version 9.0.1cd source
+
+pip3 csv

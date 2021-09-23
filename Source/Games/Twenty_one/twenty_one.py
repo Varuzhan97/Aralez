@@ -2,7 +2,7 @@ import yaml
 import random
 import os
 import time
-import random
+from Utils import utils
 
 #Convert number name to digit
 def strings_to_numbers(argument):
@@ -34,28 +34,14 @@ def strings_to_numbers(argument):
     #Otherwise second argument will be assigned as default value of passed argument
     return switcher.get(argument, -1)
 
-#Function to load and play one random or specific tts clip from directory
-def load_play_tts_clip(tts_folder, specific = None, stop_time = 1):
-    #Timer for a short stop befor speech
-    time.sleep(int(stop_time))
-    if specific is not None:
-        play = os.path.join(tts_folder, specific + ".mp3")
-        os.system("mpg321 %s --stereo" % ('"' + play + '"'))
-    else:
-        all_files = []
-        for file in os.listdir(tts_folder):
-            if file.endswith(".mp3"):
-                all_files.append(os.path.join(tts_folder, file))
-        play = random.choice(all_files)
-        os.system("mpg321 %s --stereo" % ('"' + play + '"'))
-
 #Function to get player speech
 def process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
     #Think time and ending speeches
-    load_play_tts_clip(think_time_speech)
+    utils.load_play_tts_clip(think_time_speech)
     #Timer for a 5 seconds think time
-    time.sleep(5)
-    load_play_tts_clip(think_time_end_speech)
+    #After 5 seconds inform
+    #time.sleep(5)
+    utils.load_play_tts_clip(tts_folder = think_time_end_speech, stop_time = 5)
 
     #Get and validate answer
     while True:
@@ -69,10 +55,10 @@ def process_answer(current_number, range_limit, wrong_speech, correct_speech, st
         print("this is: ", answer_number)
         #If number is out if range listen again, else break
         if (answer_number < current_number+1) or (answer_number > current_number+range_limit):
-            load_play_tts_clip(wrong_speech)
+            utils.load_play_tts_clip(wrong_speech)
             continue
         break
-    load_play_tts_clip(correct_speech)
+    utils.load_play_tts_clip(correct_speech)
     return answer_number
 
 #Function to generate robot number
@@ -80,14 +66,14 @@ def generate_number(current_number, range_limit, numbers_speech):
     #If the next number can be in range of [19,21] then return 21
     if (current_number+range_limit) >= 21:
         generated_number = 21
-        load_play_tts_clip(numbers_speech, specific = str(generated_number))
+        utils.load_play_tts_clip(numbers_speech, specific = str(generated_number))
         return generated_number
     else:
         generated_number = random.randint(current_number+1, current_number+range_limit)
         print("Range: ", current_number+1, current_number+range_limit)
         print("Number: ", generated_number)
         print("aaaaaaaaaaaaa: ", numbers_speech)
-        load_play_tts_clip(numbers_speech, specific = str(generated_number))
+        utils.load_play_tts_clip(numbers_speech, specific = str(generated_number))
         return generated_number
 
 def player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
@@ -96,21 +82,21 @@ def player_answer(current_number, range_limit, wrong_speech, correct_speech, win
     current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
     #Check for STOP SIGNAL
     if current_number == -1:
-        load_play_tts_clip(stop_speech)
+        utils.load_play_tts_clip(stop_speech)
         return -1
     #Check for WINNER SIGNAL
     if current_number == 21:
-        load_play_tts_clip(winner_speech)
+        utils.load_play_tts_clip(winner_speech)
         return 1
     return current_number
 
 def robot_answer(current_number, range_limit, prequestion_speech, numbers_speech, loser_speech):
     # Generate a random integer N such that (current_number+1) <= N <= (current_number+range_limit)
-    load_play_tts_clip(prequestion_speech)
+    utils.load_play_tts_clip(prequestion_speech)
     current_number = generate_number(current_number, range_limit, numbers_speech)
     #Check for WINNER SIGNAL
     if current_number == 21:
-        load_play_tts_clip(loser_speech)
+        utils.load_play_tts_clip(loser_speech)
         return 1
     print ("Current: ", current_number)
     return current_number
@@ -137,7 +123,7 @@ def twenty_one(twenty_one_tts_folder, stt, vad_audio):
     first_start = random.randint(0, 1)
     print("sssssssssssssssssssssssss", first_start, first_start_speech, str(first_start))
 
-    load_play_tts_clip(first_start_speech, specific = str(first_start))
+    utils.load_play_tts_clip(first_start_speech, specific = str(first_start))
     while True:
         #If starts child
         if first_start:

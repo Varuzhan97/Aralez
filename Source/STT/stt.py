@@ -92,6 +92,9 @@ class Audio(object):
         wf.writeframes(data)
         wf.close()
 
+        #Get wav file size
+        file_size = os.path.getsize(filename)
+        return file_size
 
 class VADAudio(Audio):
     """Filter & segment audio with voice activity detection."""
@@ -150,11 +153,16 @@ class VADAudio(Audio):
                     yield None
                     ring_buffer.clear()
 
-def listen_audio(vad_audio, rate = 16000, vad_aggressiveness = 3):
+def listen_audio(vad_audio, save_wav = False, save_wav_path = None):
     vad_audio.pa = pyaudio.PyAudio()
     vad_audio.stream = vad_audio.pa.open(**vad_audio.kwargs)
     vad_audio.stream.start_stream()
     frames = vad_audio.vad_collector()
+
+    #Check data collection folder
+    if save_wav is True and save_wav_path is not None:
+        os.makedirs(save_wav_path, exist_ok=True)
+
     # Stream from microphone to DeepSpeech using VAD
     spinner = Halo(spinner='line')
     wav_data = bytearray()
@@ -162,22 +170,26 @@ def listen_audio(vad_audio, rate = 16000, vad_aggressiveness = 3):
         if frame is not None:
             if spinner: spinner.start()
             wav_data.extend(frame)
-            #if ARGS.savewav: wav_data.extend(frame)
+            #if ARGS.savewa: wav_data.extend(frame)
         else:
             if spinner: spinner.stop()
-            logging.debug("end utterence")
-            #if ARGS.savewav:
-                #vad_audio.write_wav(os.path.join(ARGS.savewav, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav")), wav_data)
-                #wav_data = bytearray()
             ################################################
             vad_audio.stream.stop_stream()
             vad_audio.stream.close()
             vad_audio.pa.terminate()
             #@####################################################
             text = vad_audio.model.stt(np.frombuffer(wav_data, np.int16))
-            wav_data = bytearray()
-            return text
 
-    #ARGS = parser.parse_args()
-    #if ARGS.savewav: os.makedirs(ARGS.savewav, exist_ok=True)
-    #main(model)
+            #Save wav and update/create csv
+            if save_wav:
+                file_name = os.path.join(save_wav_path, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav"))
+                file_size = vad_audio.write_wav(file_name, wav_data)
+                #wav_data = bytearray()
+
+            #Clear recorded data
+            wav_data = bytearray()
+            #Remove spaces from both side(begining and end) of string and return
+            if save_wav:
+                return text.strip(), file_name, file_size
+            else:
+                return text.strip()

@@ -1,8 +1,13 @@
-Project: Aralez
+Project: Ruby
 Languages:
   En: 0
   Ru: 1
-Language: '0'
+Language: 0
+Courses:
+  Data Folder: Courses/Data
+  TTS Folder: TTS/Courses
+  Save Data: 1
+  Saved Data Folder: Courses/Collection
 Games:
   Capitals:
     Questions Number: 10
@@ -14,10 +19,10 @@ STT:
   Model Folder: STT/Model
 QA:
   Model Folder: QA/Model
-Conversation TTS:
-  Clips Folder: TTS/Conversation
-Startup TTS:
-  Clips Folder: TTS/Startup
-Actions:
-  Dance:
-    Music Folder: Dance/Music
+Conversation:
+  TTS Folder: TTS/Conversation
+Startup:
+  TTS Folder: TTS/Startup
+Music:
+  Dance Music Folder: Music/Dance
+  Lullaby Music Folder: Music/Lullaby

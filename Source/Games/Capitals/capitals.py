@@ -1,7 +1,7 @@
 import yaml
 import random
 import os
-import time
+from Utils import utils
 
 #Convert number name to digit
 def strings_to_numbers(argument):
@@ -14,27 +14,6 @@ def strings_to_numbers(argument):
     #Otherwise second argument will be assigned as default value of passed argument
     return switcher.get(argument, -1)
 
-#Function to load and play one random or specific tts clip from directory
-def load_play_tts_clip(tts_folder, specific = None, stop_time = 1):
-    #Timer for a short stop befor speech
-    time.sleep(int(stop_time))
-    if specific is not None:
-        play = os.path.join(tts_folder, specific + ".mp3")
-        os.system("mpg321 %s --stereo" % ('"' + play + '"'))
-    else:
-        all_files = []
-        for file in os.listdir(tts_folder):
-            if file.endswith(".mp3"):
-                all_files.append(os.path.join(tts_folder, file))
-        play = random.choice(all_files)
-        os.system("mpg321 %s --stereo" % ('"' + play + '"'))
-
-#Function to play a clip
-def play_tts_clip(clip_path, stop_time = 1):
-    #Timer for a short stop befor speech
-    time.sleep(int(stop_time))
-    os.system("mpg321 %s --stereo" % ('"' + clip_path + '"'))
-
 #Function to choose (N = speech_number) options from samples_path directory
 def choose_options(samples_path, speech_number):
     temp_result_speech = random.sample(os.listdir(samples_path), speech_number)
@@ -45,11 +24,11 @@ def choose_options(samples_path, speech_number):
 
 def process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, three_variants_speech, correct_answer):
     #Think time and ending speeches
-    load_play_tts_clip(think_time_speech)
+    utils.load_play_tts_clip(think_time_speech)
     #Timer for a 5 seconds think time
-    time.sleep(5)
+    #time.sleep(5)
     #After 5 seconds inform
-    load_play_tts_clip(think_time_end_speech)
+    utils.load_play_tts_clip(tts_folder = think_time_end_speech, stop_time = 5)
 
     while True:
         answer = stt.listen_audio(vad_audio)
@@ -102,8 +81,8 @@ def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folde
     question_speech = choose_options(question_speech, capitals_questions_number)
 
     for question in question_speech:
-        load_play_tts_clip(prequestion_speech)
-        play_tts_clip(question)
+        utils.load_play_tts_clip(prequestion_speech)
+        utils.play_tts_clip(question)
         correct_answer = list()
         #Get capital of the selected country
         correct_answer.append(data_file_yaml.get(os.path.basename(question)[0:-4]))
@@ -124,34 +103,32 @@ def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folde
                 break
         #Random shuffle answer_options_speech list
         random.shuffle(three_variants_speech)
-        load_play_tts_clip(options_speech)
+        utils.load_play_tts_clip(options_speech)
         for i, option in enumerate(three_variants_speech):
-            play_tts_clip(options_number_speech[i])
-            play_tts_clip(option)
+            utils.play_tts_clip(options_number_speech[i])
+            utils.play_tts_clip(option)
 
         result = process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, three_variants_speech, correct_answer)
         if result == -2:
-            load_play_tts_clip(stop_speech)
+            utils.load_play_tts_clip(stop_speech)
             return
         if result == -1:
-            load_play_tts_clip(do_not_know_speech)
+            utils.load_play_tts_clip(do_not_know_speech)
             continue
         if result == 0:
-            load_play_tts_clip(wrong_speech)
+            utils.load_play_tts_clip(wrong_speech)
             continue
         if result == 1:
-            load_play_tts_clip(correct_speech)
+            utils.load_play_tts_clip(correct_speech)
             score +=1
             continue
 
-    load_play_tts_clip(score_speech, specific = str(score))
+    utils.load_play_tts_clip(score_speech, specific = str(score))
     if 0 <= score <= 3:
-        load_play_tts_clip(low_result_speech)
+        utils.load_play_tts_clip(low_result_speech)
     if 4 <= score <= 6:
-        load_play_tts_clip(middle_result_speech)
-        time.sleep(1)
+        utils.load_play_tts_clip(middle_result_speech)
     if 7 <= score <= 9:
-        load_play_tts_clip(high_result_speech)
-        time.sleep(1)
+        utils.load_play_tts_clip(high_result_speech)
     if score == 10:
-        load_play_tts_clip(perfect_result_speech)
+        utils.load_play_tts_clip(perfect_result_speech)
