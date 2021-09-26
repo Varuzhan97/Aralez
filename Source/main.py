@@ -6,8 +6,8 @@ from QA import qa
 import yaml
 import subprocess
 
-#from Dance import dance
-#from Movement import movement
+from Dance import dance
+from Movement import movement
 from Courses import courses
 
 from Utils import utils
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     utils.load_play_tts_clip(os.path.join(startup_tts_folder, language, "0"))
 
     #Declare Move class object
-    #self_move = movement.Move()
+    self_move = movement.Move()
 
     while True:
         speech = stt.listen_audio(vad_audio)
@@ -109,7 +109,8 @@ if __name__ == "__main__":
                     continue
                 if resp == "19":
                     #Start to dance
-                    os.system("mpg321 %s --stereo" % ('"' + "/home/varuzhan/Desktop/Aralez/Music/Dance/0.mp3" + '"'))
+                    Dance.dance(dance_music_folder)
+                    #utils.load_play_tts_clip(dance_music_folder)
                     continue
                 if resp == "21":
                     #Forward

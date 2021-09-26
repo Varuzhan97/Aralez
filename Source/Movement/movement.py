@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import logging
 import time
 
-from distance_detector import detect_distance
+from Utils.distance_detector import detect_distance
 
 
 class Move:

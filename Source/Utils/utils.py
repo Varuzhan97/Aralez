@@ -53,10 +53,6 @@ def play_tts_clip(clip_path, stop_time = 1):
     p.wait()
 
 def write_to_csv(file_name, file_size, transcription, output_folder):
-    #csv_row = []
-    #csv_row.append([os.path.basename(file_name), str(file_size), transcription])
-    print("hhhhhhhhhhhhhaaaa: ", output_folder)
-
     validated_file_path = os.path.join(output_folder, 'validated.csv')
 
     if os.path.isfile(validated_file_path):
