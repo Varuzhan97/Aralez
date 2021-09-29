@@ -5,8 +5,11 @@ Supported languages are:
 
 Games are:
   - [x] Capitals
-  - [ ] Twenty one
-  - [ ] Animals
+  - [x] Twenty one
+
+Language courses are:
+  - [x] English
+  - [x] Russian
 
 STT training results are:
   - [x] English

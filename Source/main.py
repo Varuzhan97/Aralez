@@ -129,11 +129,15 @@ if __name__ == "__main__":
                     self_move.right()
                     continue
                 if resp == "25":
+                    #Turn around
+                    self_move.turn_back()
+                    continue
+                if resp == "26":
                     #Change resp ID
-                    utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, "25"))
+                    #utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, "25"))
                     utils.load_play_tts_clip(lullaby_music_folder)
                     subprocess.call(["shutdown", "-h", "now"])
-                if resp == "28":
+                if resp == "29":
                     native_language_id, course_language_id = language, str(1 - int(language))
                     #Toggle language ID
                     new_model_path = os.path.join(stt_folder, course_language_id)
@@ -144,16 +148,17 @@ if __name__ == "__main__":
                     if courses_save_data:
                         #Make data collection path for language
                         collection_folder = os.path.join(courses_collection_folder, course_language_id)
-                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, stt, new_model_path, collection_folder)
+                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, stt, new_model_path, main_config, config_file, collection_folder)
                     else:
-                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, stt, new_model_path)
+                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, stt, new_model_path, main_config, config_file)
                     #Restore language back
                     new_model_path = os.path.join(stt_folder, native_language_id)
                     utils.change_language(vad_audio, new_model_path, change_config = False)
-                if resp == "30":
-                    utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     continue
                 if resp == "31":
+                    utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
+                    continue
+                if resp == "32":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     #Toggle language ID
                     new_model_path = os.path.join(stt_folder, str(1 - int(language)))

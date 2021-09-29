@@ -6,6 +6,75 @@ import yaml
 
 #For csv generation and update during data collection
 import csv
+'''
+#Movement
+import RPi.GPIO as GPIO
+
+
+# GPIO Mode (BOARD / BCM)
+GPIO.setmode(GPIO.BCM)
+
+# set GPIO Pins
+GPIO_TRIGGER = 18
+GPIO_ECHO = 15
+
+# set GPIO direction (IN / OUT)
+GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+GPIO.setup(GPIO_ECHO, GPIO.IN)
+'''
+def get_distance():
+    # set Trigger to HIGH
+    GPIO.output(GPIO_TRIGGER, True)
+
+    # set Trigger after 0.01ms to LOW
+    time.sleep(0.00001)
+    GPIO.output(GPIO_TRIGGER, False)
+
+    start_time = time.time()
+    stop_time = time.time()
+
+    while GPIO.input(GPIO_ECHO) == 0:
+        start_time = time.time()
+
+    while GPIO.input(GPIO_ECHO) == 1:
+        stop_time = time.time()
+
+    time_elapsed = stop_time - start_time
+    # multiply with the sonic speed (34300 cm/s)
+    # and divide by 2, because there and back
+    return (time_elapsed * 34300) / 2
+
+
+def detect_distance(expected_distance: int):
+    try:
+        if distance() < expected_distance:
+            print("Distance less than % cm:  %.1f cm" % expected_distance)
+            return False
+    except KeyboardInterrupt:
+        print("Measurement stopped by User")
+        GPIO.cleanup()
+
+#Load course checkpoint in YAML file
+def load_course_checkpoint(course_language_id, yaml_file_data):
+    checkpoint = int()
+    if course_language_id == "0":
+        checkpoint = yaml_file_data["Courses"]["Checkpoint English"]
+    if course_language_id == "1":
+        checkpoint = yaml_file_data["Courses"]["Checkpoint Russian"]
+    return checkpoint
+
+#Save course checkpoint in YAML file
+def save_course_checkpoint(course_language_id, checkpoint, yaml_file_data, yaml_file):
+    if course_language_id == "0":
+        yaml_file_data["Courses"]["Checkpoint English"] = checkpoint
+    if course_language_id == "1":
+        yaml_file_data["Courses"]["Checkpoint Russian"] = checkpoint
+
+    #Reset file pointer and clear YAML config file
+    yaml_file.seek(0)
+    yaml_file.truncate(0) #Need '0' when using r+
+    #Rewrite YAML file content with modified language
+    yaml.dump(yaml_file_data, yaml_file, default_flow_style=False, sort_keys=False)
 
 #Set new language ang change configuration in YAML file
 def change_language(vad_audio, new_model_path, yaml_file_data = None, yaml_file = None, change_config = True):

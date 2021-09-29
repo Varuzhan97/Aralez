@@ -1,9 +1,7 @@
 import RPi.GPIO as GPIO
 import logging
 import time
-
-from Utils.distance_detector import detect_distance
-
+from Utils import utils
 
 class Move:
     def __init__(self):
@@ -28,13 +26,13 @@ class Move:
         GPIO.output(self.in2, GPIO.LOW)
         GPIO.output(self.in3, GPIO.LOW)
         GPIO.output(self.in4, GPIO.LOW)
-        self.p1 = GPIO.PWM(en1, 1000)
-        self.p2 = GPIO.PWM(en2, 1000)
+        self.p1 = GPIO.PWM(self.en1, 1000)
+        self.p2 = GPIO.PWM(self.en2, 1000)
         self.p1.start(25)
         self.p2.start(25)
 
     def forward(self):
-        if detect_distance(self.expected_distance):
+        if utils.detect_distance(self.expected_distance):
             GPIO.output(self.in1, GPIO.HIGH)
             GPIO.output(self.in2, GPIO.LOW)
             GPIO.output(self.in3, GPIO.HIGH)
@@ -42,7 +40,7 @@ class Move:
             logging.info("forward")
 
     def backward(self):
-        if detect_distance(self.expected_distance):
+        if utils.detect_distance(self.expected_distance):
             GPIO.output(self.in1, GPIO.LOW)
             GPIO.output(self.in2, GPIO.HIGH)
             GPIO.output(self.in3, GPIO.LOW)

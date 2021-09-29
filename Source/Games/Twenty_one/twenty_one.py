@@ -76,7 +76,7 @@ def generate_number(current_number, range_limit, numbers_speech):
         utils.load_play_tts_clip(numbers_speech, specific = str(generated_number))
         return generated_number
 
-def player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
+def player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
     print("Range: ", current_number+1, current_number+range_limit)
     # Get answer with VAD
     current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
@@ -127,7 +127,7 @@ def twenty_one(twenty_one_tts_folder, stt, vad_audio):
     while True:
         #If starts child
         if first_start:
-            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
             #If returned STOP SIGNAL or WINNER SIGNAL
             if current_number == -1 or current_number == 1:
                 return
@@ -140,7 +140,7 @@ def twenty_one(twenty_one_tts_folder, stt, vad_audio):
             #If returned WINNER SIGNAL
             if current_number == 1:
                 return
-            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
             #If returned STOP SIGNAL or WINNER SIGNAL
             if current_number == -1 or current_number == 1:
                 return
