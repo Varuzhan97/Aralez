@@ -3,17 +3,6 @@ import random
 import os
 from Utils import utils
 
-#Convert number name to digit
-def strings_to_numbers(argument):
-    switcher = {
-        "one": 1,
-        "two": 2,
-        "three": 3,
-    }
-    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
-    #Otherwise second argument will be assigned as default value of passed argument
-    return switcher.get(argument, -1)
-
 #Function to choose (N = speech_number) options from samples_path directory
 def choose_options(samples_path, speech_number):
     temp_result_speech = random.sample(os.listdir(samples_path), speech_number)
@@ -26,7 +15,6 @@ def process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, thr
     #Think time and ending speeches
     utils.load_play_tts_clip(think_time_speech)
     #Timer for a 5 seconds think time
-    #time.sleep(5)
     #After 5 seconds inform
     utils.load_play_tts_clip(tts_folder = think_time_end_speech, stop_time = 5)
 
@@ -40,7 +28,7 @@ def process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, thr
         if answer == 'i can not answer' or answer == 'i do not know':
             return -1
         if answer == 'one' or answer == 'two' or answer == 'three':
-            answer_number = strings_to_numbers(answer)
+            answer_number = utils.strings_to_numbers(answer)
             if(correct_answer[0] == os.path.basename(three_variants_speech[answer_number-1])[0:-4]):
                 return 1
             else:

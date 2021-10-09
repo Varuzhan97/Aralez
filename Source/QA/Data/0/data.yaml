@@ -1,0 +1,70 @@
+ruby: 0
+hi: 1
+hello: 1
+what is your name: 2
+what does your name mean: 3
+introduce yourself: 4
+who are you: 4
+what is your nationality: 5
+where are you from: 6
+what is your motherland: 6
+how old are you: 7
+what is your gender: 8
+are you a boy or a girl: 8
+are you a boy: 8
+are you a girl: 8
+do you have friends: 9
+am i your friend: 9
+are you my friend: 9
+how are you: 10
+what can you do: 11
+can you count: 12
+can you play games: 13
+what games can you play: 13
+how many games can you play: 13
+let's play a game: 14
+i want to play a game: 14
+let's play capitals: 15
+i want to play capitals: 15
+let's play twenty one: 16
+i want to play twenty one: 16
+are you a human: 17
+can you sing: 17
+can you cook: 17
+can you take a photo: 17
+can you take a selfie: 17
+can you eat: 17
+can you drink: 17
+can you get hungry: 17
+do you know my name: 17
+are you okay: 18
+are you a robot: 18
+can you dance: 18
+can you sleep: 18
+do you speak english: 18
+do you speak russian: 18
+dance: 19
+start to dance: 19
+come here: 20
+go forward: 21
+go back: 22
+go left: 23
+go right: 24
+turn around: 25
+lull me to sleep: 26
+play a lullaby: 26
+sleep: 27
+you can sleep: 27
+i want to sleep: 27
+shut down: 27
+power off: 27
+bye: 27
+goodbye: 27
+how many languages do you know: 28
+teach me the commands in russian: 29
+switch the language: 30
+change the language: 30
+speak in english: 31
+switch to english: 31
+speak in russian: 32
+switch to russian: 32

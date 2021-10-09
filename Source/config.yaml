@@ -8,7 +8,7 @@ Courses:
   TTS Folder: TTS/Courses
   Save Data: 1
   Checkpoint English: 0
-  Checkpoint Russian: 2
+  Checkpoint Russian: 0
   Saved Data Folder: Courses/Collection
 Games:
   Capitals:
@@ -20,7 +20,7 @@ Games:
 STT:
   Model Folder: STT/Model
 QA:
-  Model Folder: QA/Model
+  Data Folder: QA/Data
 Conversation:
   TTS Folder: TTS/Conversation
 Startup:

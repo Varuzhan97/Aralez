@@ -17,7 +17,6 @@ def get_answer(stt, vad_audio, correct_answer, numbers_speech, again_repeat_spee
             answer, file_name, file_size = stt.listen_audio(vad_audio, save_wav = True, save_wav_path = collection_folder)
         else:
             answer = stt.listen_audio(vad_audio)
-        print(answer)
         if answer == '':
             #Remove saved wav file
             os.remove(file_name)
@@ -70,8 +69,6 @@ def start_course(courses_tts_folder, courses_data_folder, vad_audio, stt, model_
     #Check course current status
     if current_command_id == 0:
         utils.load_play_tts_clip(numbers_course_prespeech)
-    elif current_command_id == len(numbers_keys_list):
-        utils.load_play_tts_clip(conversation_course_prespeech)
     else:
         utils.load_play_tts_clip(course_continue_speech)
 
@@ -94,28 +91,25 @@ def start_course(courses_tts_folder, courses_data_folder, vad_audio, stt, model_
                 utils.save_course_checkpoint(course_language_id, current_command_id, yaml_file_data, yaml_file)
             else:
                 current_command_id = get_answer(stt, vad_audio, correct_answer, current_number_speech, again_repeat_speech, excellent_speech, current_command_id)
-    else:
-        #Load commands scorer
-        vad_audio.set_scorer(model_path, 'course_commands.scorer')
-        #if current_command_id == len(numbers_keys_list):
-            #utils.load_play_tts_clip(conversation_course_prespeech)
-        #else:
-            #sharunakelu speech
-        for i in range(current_command_id - len(numbers_keys_list), len(conversation_keys_list)):
-            utils.play_tts_clip(os.path.join(conversation_speech, str(i) + ".mp3"))
-            utils.load_play_tts_clip(repeat_speech)
-            #Get answer line from numbers data dictionary
-            #Get parameters
-            correct_answer = conversation_data.get(conversation_keys_list[i])
-            current_command_speech = os.path.join(conversation_speech, str(i) + ".mp3")
-            #Get answer line from numbers data dictionary
-            if collection_folder is not None:
-                current_command_id, file_name, file_size = get_answer(stt, vad_audio, correct_answer, current_command_speech, again_repeat_speech, excellent_speech, current_command_id, collection_folder)
-                #Update collected data csv
-                utils.write_to_csv(file_name, file_size, correct_answer, collection_folder)
-                #Save the checkpoint in config
-                utils.save_course_checkpoint(course_language_id, current_command_id, yaml_file_data, yaml_file)
-            else:
-                current_command_id = get_answer(stt, vad_audio, correct_answer, current_command_speech, again_repeat_speech, excellent_speech, current_command_id)
+    #Load commands scorer
+    vad_audio.set_scorer(model_path, 'course_commands.scorer')
+    if current_command_id == len(numbers_keys_list):
+        utils.load_play_tts_clip(conversation_course_prespeech)
+    for i in range(current_command_id - len(numbers_keys_list), len(conversation_keys_list)):
+        utils.play_tts_clip(os.path.join(conversation_speech, str(i) + ".mp3"))
+        utils.load_play_tts_clip(repeat_speech)
+        #Get answer line from numbers data dictionary
+        #Get parameters
+        correct_answer = conversation_data.get(conversation_keys_list[i])
+        current_command_speech = os.path.join(conversation_speech, str(i) + ".mp3")
+        #Get answer line from numbers data dictionary
+        if collection_folder is not None:
+            current_command_id, file_name, file_size = get_answer(stt, vad_audio, correct_answer, current_command_speech, again_repeat_speech, excellent_speech, current_command_id, collection_folder)
+            #Update collected data csv
+            utils.write_to_csv(file_name, file_size, correct_answer, collection_folder)
+            #Save the checkpoint in config
+            utils.save_course_checkpoint(course_language_id, current_command_id, yaml_file_data, yaml_file)
+        else:
+            current_command_id = get_answer(stt, vad_audio, correct_answer, current_command_speech, again_repeat_speech, excellent_speech, current_command_id)
 
     check_checkpoint_limit(len(numbers_keys_list) + len(conversation_keys_list), course_language_id, yaml_file_data, yaml_file)

@@ -4,43 +4,12 @@ import os
 import time
 from Utils import utils
 
-#Convert number name to digit
-def strings_to_numbers(argument):
-    switcher = {
-        "zero": 0,
-        "one": 1,
-        "two": 2,
-        "three": 3,
-        "four": 4,
-        "five": 5,
-        "six": 6,
-        "seven": 7,
-        "eight": 8,
-        "nine": 9,
-        "ten": 10,
-        "eleven": 11,
-        "twelve": 12,
-        "thirteen": 13,
-        "fourteen": 14,
-        "fifteen": 15,
-        "sixteen": 16,
-        "seventeen": 17,
-        "eighteen": 18,
-        "nineteen": 19,
-        "twenty": 20,
-        "twenty one": 21,
-    }
-    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
-    #Otherwise second argument will be assigned as default value of passed argument
-    return switcher.get(argument, -1)
-
 #Function to get player speech
 def process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
     #Think time and ending speeches
     utils.load_play_tts_clip(think_time_speech)
     #Timer for a 5 seconds think time
     #After 5 seconds inform
-    #time.sleep(5)
     utils.load_play_tts_clip(tts_folder = think_time_end_speech, stop_time = 5)
 
     #Get and validate answer
@@ -51,8 +20,7 @@ def process_answer(current_number, range_limit, wrong_speech, correct_speech, st
         if answer == 'stop' or answer == 'stop the game':
             return -1
         #if answer == 'one' or answer == 'two' or answer == 'three':
-        answer_number = strings_to_numbers(answer)
-        print("this is: ", answer_number)
+        answer_number = utils.strings_to_numbers(answer)
         #If number is out if range listen again, else break
         if (answer_number < current_number+1) or (answer_number > current_number+range_limit):
             utils.load_play_tts_clip(wrong_speech)
@@ -70,14 +38,10 @@ def generate_number(current_number, range_limit, numbers_speech):
         return generated_number
     else:
         generated_number = random.randint(current_number+1, current_number+range_limit)
-        print("Range: ", current_number+1, current_number+range_limit)
-        print("Number: ", generated_number)
-        print("aaaaaaaaaaaaa: ", numbers_speech)
         utils.load_play_tts_clip(numbers_speech, specific = str(generated_number))
         return generated_number
 
 def player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
-    print("Range: ", current_number+1, current_number+range_limit)
     # Get answer with VAD
     current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
     #Check for STOP SIGNAL
@@ -98,7 +62,6 @@ def robot_answer(current_number, range_limit, prequestion_speech, numbers_speech
     if current_number == 21:
         utils.load_play_tts_clip(loser_speech)
         return 1
-    print ("Current: ", current_number)
     return current_number
 
 def twenty_one(twenty_one_tts_folder, stt, vad_audio):
@@ -121,7 +84,6 @@ def twenty_one(twenty_one_tts_folder, stt, vad_audio):
     random.seed(time.clock())
     #Choose first to start // 0 -> robot | 1 -> child
     first_start = random.randint(0, 1)
-    print("sssssssssssssssssssssssss", first_start, first_start_speech, str(first_start))
 
     utils.load_play_tts_clip(first_start_speech, specific = str(first_start))
     while True:

@@ -1,156 +1,38 @@
-#Convert sentence string to corresponding ID
-def strings_to_id(argument, language_id):
-    switcher_0 = {
-        "ruby": 0,
-        "hi": 1,
-        "hello": 1,
-        "what is your name": 2,
-        "what does your name mean": 3,
-        "introduce yourself": 4,
-        "who are you": 4,
-        "what is your nationality": 5,
-        "where are you from": 6,
-        "what is your motherland": 6,
-        "how old are you": 7,
-        "what is your gender": 8,
-        "are you a boy or a girl": 8,
-        "are you a boy": 8,
-        "are you a girl": 8,
-        "do you have friends": 9,
-        "am i your friend": 9,
-        "are you my friend": 9,
-        "how are you": 10,
-        "what can you do": 11,
-        "can you count": 12,
-        "can you play games": 13,
-        "what games can you play": 13,
-        "how many games can you play": 13,
-        "let's play a game": 14,
-        "i want to play a game": 14,
-        "let's play capitals": 15,
-        "i want to play capitals": 15,
-        "let's play twenty one": 16,
-        "i want to play twenty one": 16,
-        "are you a human": 17,
-        "can you sing": 17,
-        "can you cook": 17,
-        "can you take a photo": 17,
-        "can you take a selfie": 17,
-        "can you eat": 17,
-        "can you drink": 17,
-        "can you get hungry": 17,
-        "do you know my name": 17,
-        "are you okay": 18,
-        "are you a robot": 18,
-        "can you dance": 18,
-        "can you sleep": 18,
-        "do you speak english": 18,
-        "do you speak russian": 18,
-        "dance": 19,
-        "start to dance": 19,
-        "come here": 20,
-        "go forward": 21,
-        "go back": 22,
-        "go left": 23,
-        "go right": 24,
-        "turn around": 25,
-        "lull me to sleep": 26,
-        "play a lullaby": 26,
-        "sleep": 27,
-        "you can sleep": 27,
-        "i want to sleep": 27,
-        "shut down": 27,
-        "power off": 27,
-        "bye": 27,
-        "goodbye": 27,
-        "how many languages do you know": 28,
-        "teach me the commands in russian": 29,
-        "switch the language": 30,
-        "change the language": 30,
-        "speak in english": 31,
-        "switch to english": 31,
-        "speak in russian": 32,
-        "switch to russian": 32,
-    }
-    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
-    #Otherwise second argument will be assigned as default value of passed argument
+import yaml
+import os
+from Levenshtein import ratio
 
-    switcher_1 = {
-        "руби": 0,
-        "привет": 1,
-        "здравствуй": 1,
-        "как тебя зовут": 2,
-        "что означает твое имя": 3,
-        "представься": 4,
-        "кто ты": 4,
-        "какая у тебя нация": 5,
-        "откуда ты": 6,
-        "какая твоя родина": 6,
-        "сколько тебе лет": 7,
-        "какой твой пол": 8,
-        "ты мальчик или девочка": 8,
-        "ты мальчик": 8,
-        "ты девушка": 8,
-        "у тебя есть друзья": 9,
-        "я твой друг": 9,
-        "ты мой друг": 9,
-        "как ты": 10,
-        "что ты умеешь делать": 11,
-        "ты можешь считать": 12,
-        "ты можешь играть в игры": 13,
-        "в какие игры ты можешь играть": 13,
-        "во сколько игр ты можешь сыграть": 13,
-        "давай сыграем в игру": 14,
-        "я хочу поиграть в игру": 14,
-        "давай сыграем в столицы": 15,
-        "я хочу поиграть в столицы": 15,
-        "давай сыграем в двадцать один": 16,
-        "я хочу поиграть в двадцать один": 16,
-        "ты человек": 17,
-        "ты умеешь петь": 17,
-        "ты умеешь готовить": 17,
-        "ты умеешь сделать фото": 17,
-        "ты умеешь сделать селфи": 17,
-        "ты умеешь есть": 17,
-        "ты умеешь пить": 17,
-        "ты умеешь проголодаться": 17,
-        "ты знаешь мое имя": 17,
-        "ты в порядке": 18,
-        "ты робот": 18,
-        "ты умеешь танцевать": 18,
-        "ты можешь спать": 18,
-        "ты говоришь по английски": 18,
-        "ты говоришь по русски": 18,
-        "танцуй": 19,
-        "начни танцевать": 19,
-        "иди сюда": 20,
-        "иди вперед": 21,
-        "иди назад": 22,
-        "иди налево": 23,
-        "иди направо": 24,
-        "убаюкивай меня": 26,
-        "сыграй колыбельную": 26,
-        "спи": 27,
-        "ты можешь поспать": 27,
-        "я хочу поспать": 27,
-        "выключайся": 27,
-        "выключи питание": 27,
-        "пока": 27,
-        "до свидания": 27,
-        "сколько языков ты знаешь": 28,
-        "научи меня команды на английском": 29,
-        "переключи язык": 30,
-        "смени язык": 30,
-        "говори по русски": 31,
-        "переключись на русский": 31,
-        "говори по английски": 32,
-        "переключись на английский": 32,
-    }
-    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
-    #Otherwise second argument will be assigned as default value of passed argument
+#Function is used to get printable results
+def get_result(question, data_file_yaml, fn):
+    answer = fn(question, data_file_yaml)
+    return answer
 
-    if language_id == "0":
-        return switcher_0.get(argument, -1)
-    if language_id == "1":
-        return switcher_1.get(argument, -1)
+def get_approximate_answer(question_string, data_file_yaml):
+    max_score = 0
+    answer = ""
+    prediction = ""
+
+    # Iterating over values
+    for row, id in data_file_yaml.items():
+        score = ratio(row, question_string)
+        #Answer founded, stop here
+        if score >= 0.9:
+            return id
+        #Answer was not founded, continue
+        elif score > max_score:
+            max_score = score
+            answer = id
+            prediction = row
+
+    #Treshold
+    if max_score > 0.8:
+        return answer
     return -1
+
+def get_answer(question_string, data_file_yaml_path):
+    answer_id = 1
+    #Load YAML file that contains question-answer_id pairs
+    data_file =  open(os.path.join(data_file_yaml_path, "data.yaml"), 'r')
+    data_file_yaml = yaml.full_load(data_file)
+    answer_id = get_result(question_string, data_file_yaml, get_approximate_answer)
+    return answer_id

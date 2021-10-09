@@ -54,6 +54,22 @@ def detect_distance(expected_distance: int):
         print("Measurement stopped by User")
         GPIO.cleanup()
 
+#Function to change LED lights
+#Color ID's
+#0 ---> red
+#1 ---> bright green / yellow
+#2 ---> dark green / yellow
+def change_led(color_id):
+    if color_id == 0:
+        #change color to red
+        return
+    if color_id == 1:
+        #bright green / yellow
+        return
+    if color_id == 2:
+        #dark green / yellow
+        return
+
 #Load course checkpoint in YAML file
 def load_course_checkpoint(course_language_id, yaml_file_data):
     checkpoint = int()
@@ -136,3 +152,33 @@ def write_to_csv(file_name, file_size, transcription, output_folder):
             csvwriter.writerow([os.path.basename(file_name), str(file_size), transcription])
 
     return validated_file_path
+
+#Convert number name to digit
+def strings_to_numbers(argument):
+    switcher = {
+        "zero": 0,
+        "one": 1,
+        "two": 2,
+        "three": 3,
+        "four": 4,
+        "five": 5,
+        "six": 6,
+        "seven": 7,
+        "eight": 8,
+        "nine": 9,
+        "ten": 10,
+        "eleven": 11,
+        "twelve": 12,
+        "thirteen": 13,
+        "fourteen": 14,
+        "fifteen": 15,
+        "sixteen": 16,
+        "seventeen": 17,
+        "eighteen": 18,
+        "nineteen": 19,
+        "twenty": 20,
+        "twenty one": 21,
+    }
+    #get() method of dictionary data type returns value of passed argument if it is present in dictionary.
+    #Otherwise second argument will be assigned as default value of passed argument.
+    return switcher.get(argument, -1)

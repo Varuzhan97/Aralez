@@ -1,21 +1,17 @@
 import os
+import yaml
+import subprocess
 from Games.Capitals import capitals
 from Games.Twenty_one import twenty_one
 from STT import stt
 from QA import qa
-import yaml
-import subprocess
-
 from Dance import dance
 #from Movement import movement
 from Courses import courses
-
 from Utils import utils
 
-#For disabling terminal logs
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
 if __name__ == "__main__":
+    #Get current directory
     main_dir = os.getcwd()
 
     #Load configurations for startup
@@ -32,8 +28,8 @@ if __name__ == "__main__":
     stt_folder = main_config["STT"]["Model Folder"]
     stt_folder = os.path.join(main_dir, stt_folder)
 
-    qa_folder = main_config["QA"]["Model Folder"]
-    qa_folder = os.path.join(main_dir, qa_folder)
+    qa_data_folder = main_config["QA"]["Data Folder"]
+    qa_data_folder = os.path.join(main_dir, qa_data_folder)
 
     capitals_questions_number = main_config["Games"]["Capitals"]["Questions Number"]
 
@@ -89,7 +85,7 @@ if __name__ == "__main__":
         speech = stt.listen_audio(vad_audio)
         print("STT result: %s" % speech)
         if speech != "":
-            resp = str(qa.strings_to_id(speech, language))
+            resp = str(qa.get_answer(speech, os.path.join(qa_data_folder, language)))
             #Response cases
             all_files = []
             if resp != "-1":
@@ -102,15 +98,14 @@ if __name__ == "__main__":
                     continue
                 if resp == "16":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
-                    #Load capitals scorer
+                    #Load twenty one scorer
                     vad_audio.set_scorer(model_path, 'twenty_one.scorer')
                     twenty_one.twenty_one(os.path.join(twenty_one_tts_folder, language), stt, vad_audio)
                     vad_audio.set_scorer(model_path, 'conversation.scorer')
                     continue
                 if resp == "19":
                     #Start to dance
-                    dance.dance(dance_music_folder)
-                    #utils.load_play_tts_clip(dance_music_folder)
+                    dance.start_dance(dance_music_folder)
                     continue
                 if resp == "21":
                     #Forward
@@ -134,7 +129,6 @@ if __name__ == "__main__":
                     continue
                 if resp == "26":
                     #Change resp ID
-                    #utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, "25"))
                     utils.load_play_tts_clip(lullaby_music_folder)
                     subprocess.call(["shutdown", "-h", "now"])
                 if resp == "29":
