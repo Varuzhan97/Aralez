@@ -8,7 +8,7 @@ from QA import qa
 from Dance import dance
 #from Movement import movement
 from Courses import courses
-from Utils import utils
+from Utils import utils, lights
 
 if __name__ == "__main__":
     #Get current directory
@@ -81,6 +81,9 @@ if __name__ == "__main__":
     #Declare Move class object
     #self_move = movement.Move()
 
+    Declare Lights class object
+    self_lights = lights.Lights()
+
     while True:
         speech = stt.listen_audio(vad_audio)
         print("STT result: %s" % speech)
@@ -105,7 +108,7 @@ if __name__ == "__main__":
                     continue
                 if resp == "19":
                     #Start to dance
-                    dance.start_dance(dance_music_folder)
+                    dance.start_dance(dance_music_folder, self_lights)
                     continue
                 if resp == "21":
                     #Forward

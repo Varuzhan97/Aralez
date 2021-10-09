@@ -54,22 +54,6 @@ def detect_distance(expected_distance: int):
         print("Measurement stopped by User")
         GPIO.cleanup()
 
-#Function to change LED lights
-#Color ID's
-#0 ---> red
-#1 ---> bright green / yellow
-#2 ---> dark green / yellow
-def change_led(color_id):
-    if color_id == 0:
-        #change color to red
-        return
-    if color_id == 1:
-        #bright green / yellow
-        return
-    if color_id == 2:
-        #dark green / yellow
-        return
-
 #Load course checkpoint in YAML file
 def load_course_checkpoint(course_language_id, yaml_file_data):
     checkpoint = int()
