@@ -81,7 +81,7 @@ if __name__ == "__main__":
     #Declare Move class object
     #self_move = movement.Move()
 
-    Declare Lights class object
+    #Declare Lights class object
     self_lights = lights.Lights()
 
     while True:
