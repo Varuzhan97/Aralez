@@ -1,12 +1,13 @@
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import time
+from multiprocessing import Process
 
 class Lights:
     def __init__(self):
-        self.red = 17
-        self.blue = 27
-        self.green = 22
-
+        self.red = 4
+        self.blue = 2
+        self.green = 3
+        '''
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.red, GPIO.OUT)
         GPIO.setup(self.blue, GPIO.OUT)
@@ -15,7 +16,8 @@ class Lights:
         GPIO.output(self.red, GPIO.LOW)
         GPIO.output(self.blue, GPIO.LOW)
         GPIO.output(self.green, GPIO.LOW)
-
+        '''
+    '''
     def sleep(self):
         GPIO.output(self.red, GPIO.LOW)
         GPIO.output(self.blue, GPIO.LOW)
@@ -42,3 +44,4 @@ class Lights:
             GPIO.output(self.green, GPIO.HIGH)
         elif color_id == 2:
             GPIO.output(self.red, GPIO.HIGH)
+    '''
