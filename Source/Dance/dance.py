@@ -96,17 +96,17 @@ class Dance:
         self.p1.ChangeDutyCycle(50)
         self.p2.ChangeDutyCycle(50)
 
-    def play_dance_music(music_folder_path, shared_num):
+    def play_dance_music(self, music_folder_path, shared_num):
         choose_music_id = random.randint(0, 1)
         utils.play_tts_clip(os.path.join(music_folder_path, str(choose_music_id) + ".mp3"))
         shared_num.value = 1
 
-    def start_dance(music_folder_path, lights):
+    def start_dance(self, music_folder_path, lights):
         shared_num = multiprocessing.Value('d', 0)
         #Randomly choose music
         #Check music ID and choose dance
-        music_proc = multiprocessing.Process(target=play_dance_music,args=(self, music_folder_path, shared_num, ))
-        dance_proc = multiprocessing.Process(target=play_madagascar(self),args=(shared_num, ))
+        music_proc = multiprocessing.Process(target=play_dance_music,args=(music_folder_path, shared_num, ))
+        dance_proc = multiprocessing.Process(target=play_madagasca,args=(shared_num, ))
         lights_proc = multiprocessing.Process(target=lights.light_show(music_proc, shared_num, ))
 
         music_proc.start()
