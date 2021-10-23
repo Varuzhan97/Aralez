@@ -4,9 +4,9 @@ from multiprocessing import Process
 
 class Lights:
     def __init__(self):
-        self.red = 4
-        self.blue = 2
-        self.green = 3
+        self.red = 11
+        self.blue = 9
+        self.green = 10
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.red, GPIO.OUT)
@@ -20,8 +20,9 @@ class Lights:
         GPIO.output(self.green, GPIO.LOW)
 
     def light_show(self, music_proc: Process, shared_num):
+        self.reset_led()
         while shared_num.value == 0:
-            GPIO.output(self.green, GPIO.LOW)
+            GPIO.output(self.blue, GPIO.LOW)
             GPIO.output(self.red, GPIO.HIGH)
             time.sleep(1)
             GPIO.output(self.red, GPIO.LOW)

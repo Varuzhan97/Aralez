@@ -1,6 +1,7 @@
 #For dance parallelism
 import multiprocessing
 import os
+import RPi.GPIO as GPIO
 import random
 from Utils import utils, lights
 
@@ -32,7 +33,7 @@ class Dance:
         self.p1.start(50)
         self.p2.start(50)
 
-    def play_madagascar(self):
+    def play_madagascar(self, shared_num):
         self.set_medium_speed()
         while shared_num.value == 0:
             self.turnaround()
@@ -105,14 +106,13 @@ class Dance:
         shared_num = multiprocessing.Value('d', 0)
         #Randomly choose music
         #Check music ID and choose dance
-        music_proc = multiprocessing.Process(target=play_dance_music,args=(music_folder_path, shared_num, ))
-        dance_proc = multiprocessing.Process(target=play_madagasca,args=(shared_num, ))
-        lights_proc = multiprocessing.Process(target=lights.light_show(music_proc, shared_num, ))
-
+        music_proc = multiprocessing.Process(target=self.play_dance_music,args=(music_folder_path, shared_num, ))
         music_proc.start()
+        dance_proc = multiprocessing.Process(target=self.play_madagascar,args=(shared_num, ))
         dance_proc.start()
+        lights_proc = multiprocessing.Process(target=lights.light_show(music_proc, shared_num, ))
         lights_proc.start()
 
         music_proc.join()
         dance_proc.join()
-        lights_proc.start()
+        lights_proc.join()
