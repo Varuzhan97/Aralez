@@ -28,8 +28,8 @@ class Move:
         GPIO.output(self.in4, GPIO.LOW)
         self.p1 = GPIO.PWM(self.en1, 1000)
         self.p2 = GPIO.PWM(self.en2, 1000)
-        self.p1.start(25)
-        self.p2.start(25)
+        self.p1.start(50)
+        self.p2.start(50)
 
     def forward(self):
         if utils.detect_distance(self.expected_distance):
@@ -37,57 +37,47 @@ class Move:
             GPIO.output(self.in2, GPIO.LOW)
             GPIO.output(self.in3, GPIO.HIGH)
             GPIO.output(self.in4, GPIO.LOW)
-            logging.info("forward")
+            time.sleep(3)
+            self.stop()
 
     def backward(self):
-        if utils.detect_distance(self.expected_distance):
-            GPIO.output(self.in1, GPIO.LOW)
-            GPIO.output(self.in2, GPIO.HIGH)
-            GPIO.output(self.in3, GPIO.LOW)
-            GPIO.output(self.in4, GPIO.HIGH)
-            logging.info("backward")
+        self.turn_back()
+        self.forward()
 
     def stop(self):
         GPIO.output(self.in1, GPIO.LOW)
         GPIO.output(self.in2, GPIO.LOW)
         GPIO.output(self.in3, GPIO.LOW)
         GPIO.output(self.in4, GPIO.LOW)
-        logging.info("stop")
 
     def left(self):
-        GPIO.output(self.in1, GPIO.HIGH)
-        GPIO.output(self.in2, GPIO.LOW)
-        GPIO.output(self.in3, GPIO.LOW)
-        GPIO.output(self.in4, GPIO.LOW)
-        time.sleep(2)
-        GPIO.output(self.in1, GPIO.LOW)
-
-    def right(self):
         GPIO.output(self.in1, GPIO.LOW)
         GPIO.output(self.in2, GPIO.LOW)
         GPIO.output(self.in3, GPIO.HIGH)
         GPIO.output(self.in4, GPIO.LOW)
-        time.sleep(2)
-        GPIO.output(self.in3, GPIO.LOW)
+        time.sleep(1.5)
+        self.forward()
 
+    def right(self):
+        GPIO.output(self.in1, GPIO.HIGH)
+        GPIO.output(self.in2, GPIO.LOW)
+        GPIO.output(self.in3, GPIO.LOW)
+        GPIO.output(self.in4, GPIO.LOW)
+        time.sleep(1.5)
+        self.forward()
 
     def turn_back(self):
-        self.low()
         GPIO.output(self.in1, GPIO.HIGH)
         GPIO.output(self.in2, GPIO.LOW)
         GPIO.output(self.in3, GPIO.LOW)
         GPIO.output(self.in4, GPIO.HIGH)
-        time.sleep(4)
+        time.sleep(3)
         self.stop()
 
-    def high(self):
+    def high_speed(self):
         self.p1.ChangeDutyCycle(75)
         self.p2.ChangeDutyCycle(75)
 
-    def low(self):
-        self.p1.ChangeDutyCycle(25)
-        self.p2.ChangeDutyCycle(25)
-
-    def medium(self):
+    def medium_speed(self):
         self.p1.ChangeDutyCycle(50)
         self.p2.ChangeDutyCycle(50)

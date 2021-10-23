@@ -79,7 +79,10 @@ if __name__ == "__main__":
     utils.load_play_tts_clip(os.path.join(startup_tts_folder, language, "0"))
 
     #Declare Move class object
-    #self_move = movement.Move()
+    self_move = movement.Move()
+
+    #Declare Dance class object
+    self_dance = dance.Dance()
 
     #Declare Lights class object
     self_lights = lights.Lights()
@@ -108,7 +111,7 @@ if __name__ == "__main__":
                     continue
                 if resp == "19":
                     #Start to dance
-                    dance.start_dance(dance_music_folder, self_lights)
+                    self_dance.start_dance(dance_music_folder, self_lights)
                     continue
                 if resp == "21":
                     #Forward
