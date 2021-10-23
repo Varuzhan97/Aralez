@@ -6,7 +6,7 @@ from Games.Twenty_one import twenty_one
 from STT import stt
 from QA import qa
 from Dance import dance
-#from Movement import movement
+from Movement import movement
 from Courses import courses
 from Utils import utils, lights
 
@@ -77,15 +77,15 @@ if __name__ == "__main__":
 
     #Play startup speech
     utils.load_play_tts_clip(os.path.join(startup_tts_folder, language, "0"))
-
     #Declare Move class object
-    self_move = movement.Move()
+    #self_move = movement.Move()
 
     #Declare Dance class object
     self_dance = dance.Dance()
 
     #Declare Lights class object
     self_lights = lights.Lights()
+    self.lights.set_led_color(0)
 
     while True:
         speech = stt.listen_audio(vad_audio)
