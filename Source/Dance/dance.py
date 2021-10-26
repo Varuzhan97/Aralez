@@ -106,13 +106,19 @@ class Dance:
         shared_num = multiprocessing.Value('d', 0)
         #Randomly choose music
         #Check music ID and choose dance
-        music_proc = multiprocessing.Process(target=self.play_dance_music,args=(music_folder_path, shared_num, ))
-        music_proc.start()
-        dance_proc = multiprocessing.Process(target=self.play_madagascar,args=(shared_num, ))
-        dance_proc.start()
-        lights_proc = multiprocessing.Process(target=lights.light_show(music_proc, shared_num, ))
-        lights_proc.start()
+        proc = []
 
-        music_proc.join()
-        dance_proc.join()
-        lights_proc.join()
+        music_proc = multiprocessing.Process(target=self.play_dance_music,args=(self, music_folder_path, shared_num, ))
+        music_proc.start()
+        proc.append(music_proc)
+
+        dance_proc = multiprocessing.Process(target=self.play_madagascar,args=(self, shared_num, ))
+        dance_proc.start()
+        proc.append(dance_proc)
+
+        lights_proc = multiprocessing.Process(target=lights.light_show(self, shared_num, ))
+        lights_proc.start()
+        proc.append(lights_proc)
+
+        for p in proc:
+            p.join()

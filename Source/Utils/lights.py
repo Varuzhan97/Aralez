@@ -19,7 +19,7 @@ class Lights:
         GPIO.output(self.blue, GPIO.LOW)
         GPIO.output(self.green, GPIO.LOW)
 
-    def light_show(self, music_proc: Process, shared_num):
+    def light_show(self, shared_num):
         self.reset_led()
         while shared_num.value == 0:
             GPIO.output(self.blue, GPIO.LOW)
