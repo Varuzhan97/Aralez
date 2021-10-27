@@ -6,96 +6,16 @@ import random
 from Utils import utils, lights
 
 class Dance:
-    def __init__(self):
-        self.expected_distance = 30
-        # Motor 1
-        self.in1 = 17
-        self.in2 = 27
-        self.en1 = 22
-        # Motor 2
-        self.in3 = 23
-        self.in4 = 24
-        self.en2 = 25
-
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.in1, GPIO.OUT)
-        GPIO.setup(self.in2, GPIO.OUT)
-        GPIO.setup(self.in3, GPIO.OUT)
-        GPIO.setup(self.in4, GPIO.OUT)
-        GPIO.setup(self.en1, GPIO.OUT)
-        GPIO.setup(self.en2, GPIO.OUT)
-        GPIO.output(self.in1, GPIO.LOW)
-        GPIO.output(self.in2, GPIO.LOW)
-        GPIO.output(self.in3, GPIO.LOW)
-        GPIO.output(self.in4, GPIO.LOW)
-        self.p1 = GPIO.PWM(en1, 1000)
-        self.p2 = GPIO.PWM(en2, 1000)
-        self.p1.start(50)
-        self.p2.start(50)
+    def __init__(self, move):
+        self.move = move
 
     def play_madagascar(self, shared_num):
-        self.set_medium_speed()
+        self.move.set_medium_speed()
         while shared_num.value == 0:
-            self.turnaround()
-            self.forward()
-            self.backward()
-            self.stop()
-
-    def stop(self):
-        GPIO.output(self.in1, GPIO.LOW)
-        GPIO.output(self.in2, GPIO.LOW)
-        GPIO.output(self.in3, GPIO.LOW)
-        GPIO.output(self.in4, GPIO.LOW)
-
-    def forward(self):
-        if detect_distance(self.expected_distance):
-            GPIO.output(self.in1, GPIO.HIGH)
-            GPIO.output(self.in2, GPIO.LOW)
-            GPIO.output(self.in3, GPIO.HIGH)
-            GPIO.output(self.in4, GPIO.LOW)
-            time.sleep(2)
-            self.stop()
-
-    def backward(self):
-        if detect_distance(self.expected_distance):
-            GPIO.output(self.in1, GPIO.LOW)
-            GPIO.output(self.in2, GPIO.HIGH)
-            GPIO.output(self.in3, GPIO.LOW)
-            GPIO.output(self.in4, GPIO.HIGH)
-            logging.info("backward")
-
-    def left(self):
-        GPIO.output(self.in1, GPIO.HIGH)
-        GPIO.output(self.in2, GPIO.LOW)
-        GPIO.output(self.in3, GPIO.LOW)
-        GPIO.output(self.in4, GPIO.LOW)
-        time.sleep(2)
-        GPIO.output(self.in1, GPIO.LOW)
-
-    def right(self):
-        GPIO.output(self.in1, GPIO.LOW)
-        GPIO.output(self.in2, GPIO.LOW)
-        GPIO.output(self.in3, GPIO.HIGH)
-        GPIO.output(self.in4, GPIO.LOW)
-        time.sleep(2)
-        GPIO.output(self.in3, GPIO.LOW)
-
-    def turnaround(self):
-        self.low()
-        GPIO.output(self.in1, GPIO.HIGH)
-        GPIO.output(self.in2, GPIO.LOW)
-        GPIO.output(self.in3, GPIO.LOW)
-        GPIO.output(self.in4, GPIO.HIGH)
-        time.sleep(4)
-        self.stop()
-
-    def set_high_speed(self):
-        self.p1.ChangeDutyCycle(75)
-        self.p2.ChangeDutyCycle(75)
-
-    def set_medium_speed(self):
-        self.p1.ChangeDutyCycle(50)
-        self.p2.ChangeDutyCycle(50)
+            self.move.turnaround()
+            self.move.forward()
+            self.move.backward()
+            self.move.stop()
 
     def play_dance_music(self, music_folder_path, shared_num):
         choose_music_id = random.randint(0, 1)
@@ -108,15 +28,15 @@ class Dance:
         #Check music ID and choose dance
         proc = []
 
-        music_proc = multiprocessing.Process(target=self.play_dance_music,args=(self, music_folder_path, shared_num, ))
+        music_proc = multiprocessing.Process(target=self.play_dance_music,args=(self, music_folder_path, shared_num))
         music_proc.start()
         proc.append(music_proc)
 
-        dance_proc = multiprocessing.Process(target=self.play_madagascar,args=(self, shared_num, ))
+        dance_proc = multiprocessing.Process(target=self.play_madagascar,args=(self, shared_num))
         dance_proc.start()
         proc.append(dance_proc)
 
-        lights_proc = multiprocessing.Process(target=lights.light_show(self, shared_num, ))
+        lights_proc = multiprocessing.Process(target=lights.light_show, args=(self, shared_num))
         lights_proc.start()
         proc.append(lights_proc)
 

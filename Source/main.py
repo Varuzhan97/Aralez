@@ -78,10 +78,10 @@ if __name__ == "__main__":
     #Play startup speech
     utils.load_play_tts_clip(os.path.join(startup_tts_folder, language, "0"))
     #Declare Move class object
-    #self_move = movement.Move()
+    self_move = movement.Move()
 
     #Declare Dance class object
-    self_dance = dance.Dance()
+    self_dance = dance.Dance(self_move)
 
     #Declare Lights class object
     self_lights = lights.Lights()

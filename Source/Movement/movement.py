@@ -58,6 +58,15 @@ class Move:
         time.sleep(1.5)
         self.forward()
 
+    def turnaround(self):
+        self.low()
+        GPIO.output(self.in1, GPIO.HIGH)
+        GPIO.output(self.in2, GPIO.LOW)
+        GPIO.output(self.in3, GPIO.LOW)
+        GPIO.output(self.in4, GPIO.HIGH)
+        time.sleep(4)
+        self.stop()
+
     def right(self):
         GPIO.output(self.in1, GPIO.HIGH)
         GPIO.output(self.in2, GPIO.LOW)
@@ -74,9 +83,13 @@ class Move:
         time.sleep(3)
         self.stop()
 
-    def high_speed(self):
+    def set_high_speed(self):
         self.p1.ChangeDutyCycle(75)
         self.p2.ChangeDutyCycle(75)
+
+    def set_medium_speed(self):
+        self.p1.ChangeDutyCycle(50)
+        self.p2.ChangeDutyCycle(50)
 
     def medium_speed(self):
         self.p1.ChangeDutyCycle(50)
