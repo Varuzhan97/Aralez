@@ -26,7 +26,6 @@ class Dance:
         shared_num = multiprocessing.Value('d', 0)
         #Randomly choose music
         #Check music ID and choose dance
-        proc = []
 
         music_proc = multiprocessing.Process(target=self.play_dance_music,args=(self, music_folder_path, shared_num))
         music_proc.start()
@@ -40,5 +39,6 @@ class Dance:
         lights_proc.start()
         proc.append(lights_proc)
 
-        for p in proc:
-            p.join()
+        music_proc.join()
+        dance_proc.join()
+        lights_proc.join()
