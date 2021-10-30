@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     #Declare Lights class object
     self_lights = lights.Lights()
-    self.lights.set_led_color(0)
+    self_lights.set_led_color(0)
 
     while True:
         speech = stt.listen_audio(vad_audio)
