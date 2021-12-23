@@ -57,9 +57,9 @@ https://victorzhou.com/blog/easy-vqa/
 https://tts.readthedocs.io/en/latest/what_makes_a_good_dataset.html%20
 https://stt.readthedocs.io/en/latest/SUPPORTED_PLATFORMS.html
 
-GPIO setup
+### GPIO setup
 
-![alt text](https://github.com/Varuzhan97/Aralez/blob/main/Images/8154.contentimage_5F00_151701.webp)
+![alt text](https://github.com/Varuzhan97/Aralez/blob/main/Images/gpio-pin.jpg)
 
   * On/Off button: 1 ---> GPIO03, PIN# 05 | 0 ---> Ground, PIN# 06
   * Motor/wheel 1: input_1 GPIO17, PIN# 11 | input_2 GPIO27, PIN# 13 | enable_1 GPIO22, PIN# 15 | GROUND KA???
