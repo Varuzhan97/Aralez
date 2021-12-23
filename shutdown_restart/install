@@ -1,0 +1,18 @@
+#! /bin/sh
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "=> Installing shutdown/restart settings.\n"
+sudo cp shutdown_restart.py /usr/local/bin/
+sudo chmod +x /usr/local/bin/shutdown_restart.py
+
+echo "=> Starting shutdown/restart listener.\n"
+sudo cp shutdown_restart.sh /etc/init.d/
+sudo chmod +x /etc/init.d/shutdown_restart.sh
+
+sudo update-rc.d shutdown_restart.sh defaults
+sudo /etc/init.d/shutdown_restart.sh start
+
+echo "Shutdown/restart listener installed.\n"

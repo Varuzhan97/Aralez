@@ -50,3 +50,24 @@ Install the required dependencies:
   * Mono speaker. --->
   * Microphone. --->
   * Ultrasonic transducer. --->
+  * Mono speaker amplifier. --->
+
+Visual Question Answering
+https://victorzhou.com/blog/easy-vqa/
+https://tts.readthedocs.io/en/latest/what_makes_a_good_dataset.html%20
+https://stt.readthedocs.io/en/latest/SUPPORTED_PLATFORMS.html
+
+GPIO setup
+
+![alt text](https://github.com/Varuzhan97/Aralez/blob/main/Images/8154.contentimage_5F00_151701.webp)
+
+  * On/Off button: 1 ---> GPIO03, PIN# 05 | 0 ---> Ground, PIN# 06
+  * Motor/wheel 1: input_1 GPIO17, PIN# 11 | input_2 GPIO27, PIN# 13 | enable_1 GPIO22, PIN# 15 | GROUND KA???
+  * Motor/wheel 2: input_3 GPIO23, PIN# 16 | input_4 GPIO24, PIN# 18 | enable_2 GPIO25, PIN# 22 | GROUND KA???
+  * Red LED: 1 ---> GPIO11, PIN# 23 | 0 ---> GROUND KA???
+  * Green LED: 1 ---> GPIO10, PIN# 19 | 0 ---> GROUND KA???
+  * Blue LED: 1 ---> GPIO9, PIN# 21| 0 ---> GROUND KA???
+  * Ultrasonic transducer: trigger ---> GPIO18, PIN# 12 | echo ---> GPIO15, PIN# 10 | 0 ---> GROUND KA???
+  * L298N motor driver: ?????????????????????????????
+  * Mono speaker: ??????????????????????????
+  * Mono speaker amplifier: ????????????????????

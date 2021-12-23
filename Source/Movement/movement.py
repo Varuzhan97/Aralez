@@ -59,7 +59,7 @@ class Move:
         self.forward()
 
     def turnaround(self):
-        self.low()
+        self.set_medium_speed()
         GPIO.output(self.in1, GPIO.HIGH)
         GPIO.output(self.in2, GPIO.LOW)
         GPIO.output(self.in3, GPIO.LOW)
