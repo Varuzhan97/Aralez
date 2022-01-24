@@ -2,13 +2,13 @@ Project: Ruby
 Languages:
   En: 0
   Ru: 1
-Language: 0
+Language: 1
 Courses:
   Data Folder: Courses/Data
   TTS Folder: TTS/Courses
   Save Data: 1
   Checkpoint English: 0
-  Checkpoint Russian: 0
+  Checkpoint Russian: 3
   Saved Data Folder: Courses/Collection
 Games:
   Capitals:

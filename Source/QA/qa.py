@@ -32,7 +32,9 @@ def get_approximate_answer(question_string, data_file_yaml):
 def get_answer(question_string, data_file_yaml_path):
     answer_id = 1
     #Load YAML file that contains question-answer_id pairs
-    data_file =  open(os.path.join(data_file_yaml_path, "data.yaml"), 'r')
-    data_file_yaml = yaml.full_load(data_file)
+    data_file_yaml = None
+    with open(os.path.join(data_file_yaml_path, "data.yaml"), 'r') as file:
+        #data_file =  open(os.path.join(data_file_yaml_path, "data.yaml"), 'r')
+        data_file_yaml = yaml.full_load(file)
     answer_id = get_result(question_string, data_file_yaml, get_approximate_answer)
     return answer_id

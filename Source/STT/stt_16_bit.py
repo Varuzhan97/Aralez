@@ -10,7 +10,7 @@ from halo import Halo
 from scipy import signal
 
 class Audio(object):
-    FORMAT = pyaudio.paInt32
+    FORMAT = pyaudio.paInt16
     RATE_PROCESS = 16000
     CHANNELS = 1
     BLOCKS_PER_SECOND = 50
@@ -130,12 +130,10 @@ class VADAudio(Audio):
         triggered = False
 
         for frame in frames:
-            if len(frame) < 1280:
+            if len(frame) < 640:
                 return
 
-            is_speech_1 = self.vad.is_speech(frame[:640], self.sample_rate)
-            is_speech_2 = self.vad.is_speech(frame[640:], self.sample_rate)
-            is_speech = is_speech_1 and is_speech_2
+            is_speech = self.vad.is_speech(frame, self.sample_rate)
 
             if not triggered:
                 ring_buffer.append((frame, is_speech))
@@ -161,8 +159,6 @@ def listen_audio(vad_audio, save_wav = False, save_wav_path = None):
     vad_audio.stream.start_stream()
     frames = vad_audio.vad_collector()
 
-    stream_context = vad_audio.model.createStream()
-
     #Check data collection folder
     if save_wav is True and save_wav_path is not None:
         os.makedirs(save_wav_path, exist_ok=True)
@@ -173,20 +169,16 @@ def listen_audio(vad_audio, save_wav = False, save_wav_path = None):
     for frame in frames:
         if frame is not None:
             if spinner: spinner.start()
-            dp_frame = np.frombuffer(frame, np.int32)
-            dp_frame=(dp_frame>>16).astype(np.int16)
-
-            stream_context.feedAudioContent(dp_frame)
             wav_data.extend(frame)
-            if save_wav: wav_data.extend(frame)
+            #if ARGS.savewa: wav_data.extend(frame)
         else:
             if spinner: spinner.stop()
             ################################################
-            text = stream_context.finishStream()
             vad_audio.stream.stop_stream()
             vad_audio.stream.close()
             vad_audio.pa.terminate()
             #@####################################################
+            text = vad_audio.model.stt(np.frombuffer(wav_data, np.int16))
 
             #Save wav and update/create csv
             if save_wav:

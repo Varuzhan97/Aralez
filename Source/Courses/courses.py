@@ -43,9 +43,22 @@ def start_course(courses_tts_folder, courses_data_folder, vad_audio, stt, model_
     course_language_id = os.path.basename(model_path)
     current_command_id = utils.load_course_checkpoint(course_language_id, yaml_file_data)
 
+    #Make list of keys of number data
+    numbers_keys_list = None
+    #Make list of keys of conversation data
+    conversation_keys_list = None
     #Load YAML file that contains translation pairs with corresponding ID's
-    data_file =  open(os.path.join(courses_data_folder, "data.yaml"), 'r')
-    data_file_yaml = yaml.full_load(data_file)
+    #data_file =  open(os.path.join(courses_data_folder, "data.yaml"), 'r')
+    with open(os.path.join(courses_data_folder, "data.yaml"), 'r') as file:
+        data_file_yaml = yaml.full_load(file)
+        #Get the data. Each line index of data correspondes to the ID of .mp3 clip
+        numbers_data = data_file_yaml.get("Numbers")
+        conversation_data = data_file_yaml.get("Conversation")
+        #Make list of keys of number data
+        numbers_keys_list = list(numbers_data)
+        #Make list of keys of conversation data
+        conversation_keys_list = list(conversation_data)
+
     #Configure TTS speech audio clips paths
     #courses_tts_folder is a full path and contains language ID too
     numbers_course_prespeech = os.path.join(courses_tts_folder, "0")
@@ -56,15 +69,6 @@ def start_course(courses_tts_folder, courses_data_folder, vad_audio, stt, model_
     again_repeat_speech = os.path.join(courses_tts_folder, "5")
     course_continue_speech = os.path.join(courses_tts_folder, "6")
     excellent_speech = os.path.join(courses_tts_folder, "7")
-
-    #Get the data. Each line index of data correspondes to the ID of .mp3 clip
-    numbers_data = data_file_yaml.get("Numbers")
-    conversation_data = data_file_yaml.get("Conversation")
-
-    #Make list of keys of number data
-    numbers_keys_list = list(numbers_data)
-    #Make list of keys of conversation data
-    conversation_keys_list = list(conversation_data)
 
     #Check course current status
     if current_command_id == 0:

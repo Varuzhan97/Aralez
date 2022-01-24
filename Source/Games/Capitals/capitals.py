@@ -37,8 +37,10 @@ def process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, thr
 
 def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folder, stt, vad_audio):
     #Load YAML file that contains country-capital pairs
-    data_file =  open(os.path.join(capitals_data_folder, "data.yaml"), 'r')
-    data_file_yaml = yaml.full_load(data_file)
+    data_file_yaml = None
+    with open(os.path.join(capitals_data_folder, "data.yaml"), 'r') as file:
+            data_file_yaml = yaml.full_load(file)
+    #data_file =  open(os.path.join(capitals_data_folder, "data.yaml"), 'r')
 
     #Configure TTS speech audio clips paths
     #capitals_tts_folder is a full path and contains language ID too

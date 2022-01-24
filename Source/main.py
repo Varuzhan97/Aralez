@@ -5,10 +5,10 @@ from Games.Capitals import capitals
 from Games.Twenty_one import twenty_one
 from STT import stt
 from QA import qa
-from Dance import dance
-from Movement import movement
+#from Dance import dance
+#from Movement import movement
 from Courses import courses
-from Utils import utils, lights
+from Utils import utils#, lights
 
 if __name__ == "__main__":
     #Get current directory
@@ -78,14 +78,14 @@ if __name__ == "__main__":
     #Play startup speech
     utils.load_play_tts_clip(os.path.join(startup_tts_folder, language, "0"))
     #Declare Move class object
-    self_move = movement.Move()
+    #self_move = movement.Move()
 
     #Declare Dance class object
-    self_dance = dance.Dance(self_move)
+    #self_dance = dance.Dance(self_move)
 
     #Declare Lights class object
-    self_lights = lights.Lights()
-    self_lights.set_led_color(0)
+    #self_lights = lights.Lights()
+    #self_lights.set_led_color(0)
 
     while True:
         speech = stt.listen_audio(vad_audio)
@@ -111,33 +111,38 @@ if __name__ == "__main__":
                     continue
                 if resp == "19":
                     #Start to dance
-                    self_dance.start_dance(dance_music_folder, self_lights)
+                    #self_dance.start_dance(dance_music_folder, self_lights)
                     continue
                 if resp == "21":
                     #Forward
-                    self_move.forward()
+                    #self_move.forward()
                     continue
                 if resp == "22":
                     #Back
-                    self_move.backward()
+                    #self_move.backward()
                     continue
                 if resp == "23":
                     #Left
-                    self_move.left()
+                    #self_move.left()
                     continue
                 if resp == "24":
                     #Right
-                    self_move.right()
+                    #self_move.right()
                     continue
                 if resp == "25":
                     #Turn around
-                    self_move.turn_back()
+                    #self_move.turn_back()
                     continue
                 if resp == "26":
                     #Change resp ID
                     utils.load_play_tts_clip(lullaby_music_folder)
                     subprocess.call(["shutdown", "-h", "now"])
                 if resp == "29":
+                    #Prevent same language course
+                    if language == "0" and ("english" in speech):
+                        continue
+                    if language == "1" and ("русском" in speech):
+                        continue
                     native_language_id, course_language_id = language, str(1 - int(language))
                     #Toggle language ID
                     new_model_path = os.path.join(stt_folder, course_language_id)

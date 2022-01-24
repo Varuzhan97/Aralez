@@ -4,14 +4,14 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-echo "=> Installing Aralez settings.\n"
+echo "=> Installing Ruby settings.\n"
 sudo cp main.py /usr/local/bin/
 sudo chmod +x /usr/local/bin/main.py
 
-sudo cp run_aralez.sh /etc/init.d/
-sudo chmod +x /etc/init.d/run_aralez.sh
+sudo cp run_ruby.sh /etc/init.d/
+sudo chmod +x /etc/init.d/run_ruby.sh
 
-sudo update-rc.d run_aralez.sh defaults
-sudo /etc/init.d/run_aralez.sh start
+sudo update-rc.d run_ruby.sh defaults
+sudo /etc/init.d/run_ruby.sh start
 
-echo "Aralez installed.\n"
+echo "Ruby installed.\n"
