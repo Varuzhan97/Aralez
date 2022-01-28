@@ -31,13 +31,13 @@ STT training results are:
 
 ### Environment and Requirements
   * OS: Raspberry Pi OS Lite 32-bit(Legacy / Debian Buster 10)
-  * Python 3 version: 3.6.9.
-  * Pip 3 version: 9.0.1.
+  * Python 3 version: 3.7.3.
+  * Pip 3 version: 18.1.
 
 Install the required dependencies:
-> sudo apt-get install -y mpg321
-
 > sudo apt-get install python3-pip python3-pyaudio libatlas3-base
+
+> sudo apt-get install -y mpg321
 
 > pip3 install -r requirements.txt
 
@@ -114,12 +114,14 @@ To enable auto-login with raspi-config:
   * Choose option: B2 Console Autologin
   * Select Finish, and reboot the Raspberry Pi.
 
-### Startup steps
+### First time startup steps
 
   * Prepare SD card
   * Connect components
   * Start OS
+  * Update system (sudo apt-get update)
   * Enable auto-login
+  * Enable SSH server(if not using HDMI display)
   * configure ALSA for microphone and speaker
   * Git-clone repository
   * Install requirements
@@ -146,3 +148,5 @@ sudo make install
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.7 1
 
 sudo python3 -m pip install --force-reinstall pip==9.0.1
+
+make iso ---> https://www.tomshardware.com/how-to/back-up-raspberry-pi-as-disk-image
