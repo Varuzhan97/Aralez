@@ -11,7 +11,7 @@ def choose_options(samples_path, speech_number):
         result_speech.append(os.path.join(samples_path, speech))
     return result_speech
 
-def process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, three_variants_speech, correct_answer):
+def process_answer(think_time_speech, think_time_end_speech, vad_audio, three_variants_speech, correct_answer):
     #Think time and ending speeches
     utils.load_play_tts_clip(think_time_speech)
     #Timer for a 5 seconds think time
@@ -19,7 +19,7 @@ def process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, thr
     utils.load_play_tts_clip(tts_folder = think_time_end_speech, stop_time = 5)
 
     while True:
-        answer = stt.listen_audio(vad_audio)
+        answer = vad_audio.listen_audio()
         print(answer)
         if answer == '':
             continue
@@ -35,7 +35,7 @@ def process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, thr
                 return 0
             break
 
-def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folder, stt, vad_audio):
+def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folder, vad_audio):
     #Load YAML file that contains country-capital pairs
     data_file_yaml = None
     with open(os.path.join(capitals_data_folder, "data.yaml"), 'r') as file:
@@ -98,7 +98,7 @@ def capitals(capitals_questions_number, capitals_data_folder, capitals_tts_folde
             utils.play_tts_clip(options_number_speech[i])
             utils.play_tts_clip(option)
 
-        result = process_answer(think_time_speech, think_time_end_speech, stt, vad_audio, three_variants_speech, correct_answer)
+        result = process_answer(think_time_speech, think_time_end_speech, vad_audio, three_variants_speech, correct_answer)
         if result == -2:
             utils.load_play_tts_clip(stop_speech)
             return

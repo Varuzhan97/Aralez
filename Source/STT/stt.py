@@ -9,8 +9,13 @@ import webrtcvad
 from halo import Halo
 from scipy import signal
 
+#logging.basicConfig(level=20)
+
 class Audio(object):
-    FORMAT = pyaudio.paInt16
+    """Streams raw audio from microphone. Data is received in a separate thread, and stored in a buffer, to be read from."""
+
+    FORMAT = pyaudio.paInt32
+    # Network/VAD rate-space
     RATE_PROCESS = 16000
     CHANNELS = 1
     BLOCKS_PER_SECOND = 50
@@ -28,7 +33,6 @@ class Audio(object):
         self.sample_rate = self.RATE_PROCESS
         self.block_size = int(self.RATE_PROCESS / float(self.BLOCKS_PER_SECOND))
         self.block_size_input = int(self.input_rate / float(self.BLOCKS_PER_SECOND))
-        #self.pa = pyaudio.PyAudio()
 
         self.kwargs = {
             'format': self.FORMAT,
@@ -42,7 +46,7 @@ class Audio(object):
         self.chunk = None
         # if not default device
         if self.device:
-            self.kwargs['input_device_index'] = self.device
+            kwargs['input_device_index'] = self.device
         elif file is not None:
             self.chunk = 320
             self.wf = wave.open(file, 'rb')
@@ -54,16 +58,16 @@ class Audio(object):
         """
         Microphone may not support our native processing sampling rate, so
         resample from input_rate to RATE_PROCESS here for webrtcvad and
-        deepspeech
+        stt
         Args:
             data (binary): Input audio stream
             input_rate (int): Input audio rate to resample from
         """
-        data16 = np.fromstring(string=data, dtype=np.int16)
+        data16 = np.frombuffer(data, dtype=np.int32)
         resample_size = int(len(data16) / self.input_rate * self.RATE_PROCESS)
         resample = signal.resample(data16, resample_size)
-        resample16 = np.array(resample, dtype=np.int16)
-        return resample16.tostring()
+        resample16 = np.array(tuple(resample), dtype=np.int32)
+        return resample16.tobytes()
 
     def read_resampled(self):
         """Return a block of audio data resampled to 16000hz, blocking if necessary."""
@@ -74,12 +78,12 @@ class Audio(object):
         """Return a block of audio data, blocking if necessary."""
         return self.buffer_queue.get()
 
-    def destroy(self):
-        self.stream.stop_stream()
-        self.stream.close()
-        self.pa.terminate()
+    #def destroy(self):
+        #self.stream.stop_stream()
+        #self.stream.close()
+        #self.pa.terminate()
 
-    frame_duration_ms = property(lambda self: 1000 * self.block_size // self.sample_rate)
+    frame_duration_ms = 20
 
     def write_wav(self, filename, data):
         logging.info("write wav %s", filename)
@@ -92,22 +96,13 @@ class Audio(object):
         wf.writeframes(data)
         wf.close()
 
-        #Get wav file size
-        file_size = os.path.getsize(filename)
-        return file_size
 
 class VADAudio(Audio):
     """Filter & segment audio with voice activity detection."""
 
-    def __init__(self, aggressiveness=3, input_rate=None, device=None, file=None):
+    def __init__(self, aggressiveness=3, device=None, input_rate=None, file=None):
         super().__init__(device=device, input_rate=input_rate, file=file)
         self.vad = webrtcvad.Vad(aggressiveness)
-
-    def set_scorer(self, scorer_path, scorer_name):
-        self.model.enableExternalScorer(os.path.join(scorer_path, scorer_name))
-
-    def set_model(self, model_path, model_name):
-        self.model = deepspeech.Model(os.path.join(model_path, model_name))
 
     def frame_generator(self):
         """Generator that yields all audio frames from microphone."""
@@ -130,11 +125,16 @@ class VADAudio(Audio):
         triggered = False
 
         for frame in frames:
-            if len(frame) < 640:
+            #print(len(frame), self.frame_duration_ms)
+            if len(frame) < 1280:
                 return
 
-            is_speech = self.vad.is_speech(frame, self.sample_rate)
+            #Change PCM 32-bit to 16-bit
+            dp_frame = np.frombuffer(frame, np.int32)
+            dp_frame=(dp_frame>>16).astype(np.int16)
+            ss = dp_frame.tobytes()
 
+            is_speech = self.vad.is_speech(ss, self.sample_rate)
             if not triggered:
                 ring_buffer.append((frame, is_speech))
                 num_voiced = len([f for f, speech in ring_buffer if speech])
@@ -153,43 +153,88 @@ class VADAudio(Audio):
                     yield None
                     ring_buffer.clear()
 
-def listen_audio(vad_audio, save_wav = False, save_wav_path = None):
-    vad_audio.pa = pyaudio.PyAudio()
-    vad_audio.stream = vad_audio.pa.open(**vad_audio.kwargs)
-    vad_audio.stream.start_stream()
-    frames = vad_audio.vad_collector()
+    def set_scorer(self, scorer_path, scorer_name):
+        self.model.enableExternalScorer(os.path.join(scorer_path, scorer_name))
 
-    #Check data collection folder
-    if save_wav is True and save_wav_path is not None:
-        os.makedirs(save_wav_path, exist_ok=True)
+    def set_model(self, model_path, model_name):
+        self.model = deepspeech.Model(os.path.join(model_path, model_name))
 
-    # Stream from microphone to DeepSpeech using VAD
-    spinner = Halo(spinner='line')
-    wav_data = bytearray()
-    for frame in frames:
-        if frame is not None:
-            if spinner: spinner.start()
-            wav_data.extend(frame)
-            #if ARGS.savewa: wav_data.extend(frame)
-        else:
-            if spinner: spinner.stop()
-            ################################################
-            vad_audio.stream.stop_stream()
-            vad_audio.stream.close()
-            vad_audio.pa.terminate()
-            #@####################################################
-            text = vad_audio.model.stt(np.frombuffer(wav_data, np.int16))
+    def listen_audio(self, save_wav_path = None):
+        self.pa = pyaudio.PyAudio()
+        self.stream = self.pa.open(**self.kwargs)
+        self.stream.start_stream()
+        #model = deepspeech.Model(ARGS.model)
 
-            #Save wav and update/create csv
-            if save_wav:
-                file_name = os.path.join(save_wav_path, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav"))
-                file_size = vad_audio.write_wav(file_name, wav_data)
-                #wav_data = bytearray()
+        # Start audio with VAD
+        #vad_audio = VADAudio(aggressiveness=ARGS.vad_aggressiveness,
+                             #device=ARGS.device,
+                             #input_rate=ARGS.rate,
+                             #file=ARGS.file)
+        #print("Listening (ctrl-C to exit)...")
+        frames = self.vad_collector()
 
-            #Clear recorded data
-            wav_data = bytearray()
-            #Remove spaces from both side(begining and end) of string and return
-            if save_wav:
-                return text.strip(), file_name, file_size
+        # Stream from microphone to STT using VAD
+        spinner = Halo(spinner='line')
+        stream_context = self.model.createStream()
+        wav_data = bytearray()
+        for frame in frames:
+            if frame is not None:
+                if spinner: spinner.start()
+                logging.debug("streaming frame")
+                #Change PCM 32-bit to 16-bit
+                dp_frame = np.frombuffer(frame, np.int32)
+                dp_frame=(dp_frame>>16).astype(np.int16)
+                stream_context.feedAudioContent(dp_frame)
+                if save_wav_path is not None: wav_data.extend(dp_frame)
             else:
-                return text.strip()
+                if spinner: spinner.stop()
+                if save_wav_path is not None:
+                    file_name = os.path.join(save_wav_path, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav"))
+                    file_size = self.write_wav(file_name, wav_data)
+                    wav_data = bytearray()
+                text = stream_context.finishStream()
+                #print("Recognized: %s" % text)
+                #if ARGS.keyboard:
+                    #from pyautogui import typewrite
+                    #typewrite(text)
+                self.stream.stop_stream()
+                self.stream.close()
+                self.pa.terminate()
+                if save_wav_path is not None:
+                    return text.strip(), file_name, file_size
+                else:
+                    return text.strip()
+                #stream_context = model.createStream()
+'''
+if __name__ == '__main__':
+    DEFAULT_SAMPLE_RATE = 16000
+
+    import argparse
+    parser = argparse.ArgumentParser(description="Stream from microphone to DeepSpeech using VAD")
+
+    parser.add_argument('-v', '--vad_aggressiveness', type=int, default=3,
+                        help="Set aggressiveness of VAD: an integer between 0 and 3, 0 being the least aggressive about filtering out non-speech, 3 the most aggressive. Default: 3")
+    parser.add_argument('--nospinner', action='store_true',
+                        help="Disable spinner")
+    parser.add_argument('-w', '--savewav',
+                        help="Save .wav files of utterences to given directory")
+    parser.add_argument('-f', '--file',
+                        help="Read from .wav file instead of microphone")
+
+    parser.add_argument('-m', '--model',
+                        help="Path to the model (protocol buffer binary file, or entire directory containing all standard-named files for model)")
+    parser.add_argument('-s', '--scorer',
+                        help="Path to the external scorer file.")
+    parser.add_argument('-d', '--device', type=int, default=None,
+                        help="Device input index (Int) as listed by pyaudio.PyAudio.get_device_info_by_index(). If not provided, falls back to PyAudio.get_default_device().")
+    parser.add_argument('-r', '--rate', type=int, default=DEFAULT_SAMPLE_RATE,
+                        help=f"Input device sample rate. Default: {DEFAULT_SAMPLE_RATE}. Your device may require 44100.")
+
+    ARGS = parser.parse_args()
+    if ARGS.savewav: os.makedirs(ARGS.savewav, exist_ok=True)
+    ARGS.model = "/home/pi/Aralez/Source/STT/Model/0/model.tflite"
+    ARGS.scorer = "/home/pi/Aralez/Source/STT/Model/0/conversation.scorer"
+    #ARGS.rate = 48000
+    #ARGS.vad_aggressiveness = 0
+    main(ARGS)
+    '''

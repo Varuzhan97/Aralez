@@ -88,7 +88,7 @@ if __name__ == "__main__":
     #self_lights.set_led_color(0)
 
     while True:
-        speech = stt.listen_audio(vad_audio)
+        speech = vad_audio.listen_audio()
         print("STT result: %s" % speech)
         if speech != "":
             resp = str(qa.get_answer(speech, os.path.join(qa_data_folder, language)))
@@ -99,14 +99,14 @@ if __name__ == "__main__":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     #Load capitals scorer
                     vad_audio.set_scorer(model_path, 'capitals.scorer')
-                    capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), stt, vad_audio)
+                    capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), vad_audio)
                     vad_audio.set_scorer(model_path, 'conversation.scorer')
                     continue
                 if resp == "16":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     #Load twenty one scorer
                     vad_audio.set_scorer(model_path, 'twenty_one.scorer')
-                    twenty_one.twenty_one(os.path.join(twenty_one_tts_folder, language), stt, vad_audio)
+                    twenty_one.twenty_one(os.path.join(twenty_one_tts_folder, language), vad_audio)
                     vad_audio.set_scorer(model_path, 'conversation.scorer')
                     continue
                 if resp == "19":
@@ -153,9 +153,9 @@ if __name__ == "__main__":
                     if courses_save_data:
                         #Make data collection path for language
                         collection_folder = os.path.join(courses_collection_folder, course_language_id)
-                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, stt, new_model_path, main_config, config_file, collection_folder)
+                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, new_model_path, main_config, config_file, collection_folder)
                     else:
-                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, stt, new_model_path, main_config, config_file)
+                        courses.start_course(os.path.join(courses_tts_folder, native_language_id), os.path.join(courses_data_folder, native_language_id), vad_audio, new_model_path, main_config, config_file)
                     #Restore language back
                     new_model_path = os.path.join(stt_folder, native_language_id)
                     utils.change_language(vad_audio, new_model_path, change_config = False)

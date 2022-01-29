@@ -5,7 +5,7 @@ import time
 from Utils import utils
 
 #Function to get player speech
-def process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
+def process_answer(current_number, range_limit, wrong_speech, correct_speech, vad_audio, think_time_speech, think_time_end_speech):
     #Think time and ending speeches
     utils.load_play_tts_clip(think_time_speech)
     #Timer for a 5 seconds think time
@@ -14,7 +14,7 @@ def process_answer(current_number, range_limit, wrong_speech, correct_speech, st
 
     #Get and validate answer
     while True:
-        answer = stt.listen_audio(vad_audio)
+        answer = vad_audio.listen_audio()
         if answer == '':
             continue
         if answer == 'stop' or answer == 'stop the game':
@@ -41,9 +41,9 @@ def generate_number(current_number, range_limit, numbers_speech):
         utils.load_play_tts_clip(numbers_speech, specific = str(generated_number))
         return generated_number
 
-def player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, stt, vad_audio, think_time_speech, think_time_end_speech):
+def player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, vad_audio, think_time_speech, think_time_end_speech):
     # Get answer with VAD
-    current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+    current_number = process_answer(current_number, range_limit, wrong_speech, correct_speech, vad_audio, think_time_speech, think_time_end_speech)
     #Check for STOP SIGNAL
     if current_number == -1:
         utils.load_play_tts_clip(stop_speech)
@@ -64,7 +64,7 @@ def robot_answer(current_number, range_limit, prequestion_speech, numbers_speech
         return 1
     return current_number
 
-def twenty_one(twenty_one_tts_folder, stt, vad_audio):
+def twenty_one(twenty_one_tts_folder, vad_audio):
     #Configure TTS speech audio clips paths
     #twenty_one_tts_folder is a full path and contains language ID too
     first_start_speech = os.path.join(twenty_one_tts_folder, "1")
@@ -89,7 +89,7 @@ def twenty_one(twenty_one_tts_folder, stt, vad_audio):
     while True:
         #If starts child
         if first_start:
-            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, vad_audio, think_time_speech, think_time_end_speech)
             #If returned STOP SIGNAL or WINNER SIGNAL
             if current_number == -1 or current_number == 1:
                 return
@@ -102,7 +102,7 @@ def twenty_one(twenty_one_tts_folder, stt, vad_audio):
             #If returned WINNER SIGNAL
             if current_number == 1:
                 return
-            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, stt, vad_audio, think_time_speech, think_time_end_speech)
+            current_number = player_answer(current_number, range_limit, wrong_speech, correct_speech, winner_speech, stop_speech, vad_audio, think_time_speech, think_time_end_speech)
             #If returned STOP SIGNAL or WINNER SIGNAL
             if current_number == -1 or current_number == 1:
                 return

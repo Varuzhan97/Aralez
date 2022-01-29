@@ -133,20 +133,13 @@ git commit -m "Update"
 git push origin main
 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
 
-python
-sudo apt-get update
-sudo apt-get install build-essential tk-dev libncurses5-dev libncursesw5-dev
-libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev
-
-wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz
-tar xzvf Python-3.6.0.tgz
-cd Python-3.6.0/
-./configure
-make -j4
-sudo make install
-
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.7 1
-
-sudo python3 -m pip install --force-reinstall pip==9.0.1
-
 make iso ---> https://www.tomshardware.com/how-to/back-up-raspberry-pi-as-disk-image
+
+iso without Source//installed only requirements but remove halo
+
+### ISO making steps
+
+  * lsblk
+  * sudo mkdir /dev/iso
+  * sudo mount /dev/sda1 /dev/iso
+  * sudo dd if=/dev/mmcblk0 of=/dev/iso/ruby.img bs=1M
