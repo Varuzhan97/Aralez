@@ -35,9 +35,13 @@ STT training results are:
   * Pip 3 version: 18.1.
 
 Install the required dependencies:
+> sudo apt-get update
+
 > sudo apt-get install python3-pip python3-pyaudio libatlas3-base
 
 > sudo apt-get install -y mpg321
+
+> sudo apt-get install git
 
 > pip3 install -r requirements.txt
 
@@ -50,9 +54,8 @@ Install the required dependencies:
   * (motor driver) Qunqi L298N motor drive controller board module dual H bridge DC stepper.
   * (motor) Yeeco DC electric motor 3V-6V dual shaft DC gear motor 1:120 reduction ratio geared TT magnetic gearbox
     engine with plastic car tire wheel.
-  * (mono speaker amplifier) MakerHawk MAX98357 I2S audio amplifier Module(filterless class D).
-  * (mono speaker) CQRobot speaker 3 Watt 4 Ohm.
-  * (microphone) Adafruit I2S MEMS Microphone Breakout - SPH0645LM4H.
+  * (mono speaker) ???.
+  * (microphone) ???.
   * (distance sensor) Ultrasonic transducer.
   * (RGB LED)3 RGB LED lights.
   * (ON/OFF push button) mxuteuk 19mm latching push button switch (1 NO 1 NC SPDT ON/OFF SILVER WITH 12V blue power symbol light.)
@@ -76,16 +79,6 @@ speaker https://www.adafruit.com/product/3351
 amplifier https://www.adafruit.com/product/3006
 speaker pdf https://cdn-learn.adafruit.com/downloads/pdf/adafruit-max98357-i2s-class-d-mono-amp.pdf
 
-When an ALSA application starts both configuration files are read but the settings in the .asoundrc file override the settings in the /etc/asound.conf settings.
-
-arecord  is  a  command-line soundfile recorder for the ALSA soundcard driver. It supports
-several file formats and multiple soundcards with  multiple  devices.  If  recording  with
-interleaved mode samples the file is automatically split before the 2GB filesize.
-
-aplay  is  much  the  same,  only  it  plays instead of recording. For supported soundfile
-formats, the sampling rate, bit depth, and so forth can be automatically  determined  from
-the soundfile header.
-
 #deepspeech-tflite for linux desktop without gpu
 
 ### GPIO setup
@@ -95,9 +88,7 @@ the soundfile header.
   l* On/Off button: 1 ---> GPIO03, PIN# 05 | 0 ---> Ground, PIN# 09
   * Motor/wheel 1: input_1 GPIO17, PIN# 11 | input_2 GPIO27, PIN# 13 | enable_1 GPIO22, PIN# 15 | GROUND KA???
   * Motor/wheel 2: input_3 GPIO23, PIN# 16 | input_4 GPIO24, PIN# 18 | enable_2 GPIO25, PIN# 22 | GROUND KA???
-  * Red LED: 1 ---> GPIO11, PIN# 23 | 0 ---> GROUND KA???
-  * Green LED: 1 ---> GPIO10, PIN# 19 | 0 ---> GROUND KA???
-  * Blue LED: 1 ---> GPIO9, PIN# 21| 0 ---> GROUND KA???
+  l* RGB LED: Red ---> PIN# 11 | Green ---> PIN# 13 | Blue ---> PIN# 15 | 0 ---> Ground, PIN# 25
   * Ultrasonic transducer: trigger ---> GPIO18, PIN# 12 | echo ---> GPIO15, PIN# 10 | 0 ---> GROUND KA???
   * L298N motor driver: ?????????????????????????????
   l* Mono speaker: 1 ---> amplifier 1 | 0 ---> amplifier 0
@@ -119,10 +110,9 @@ To enable auto-login with raspi-config:
   * Prepare SD card
   * Connect components
   * Start OS
-  * Update system (sudo apt-get update)
   * Enable auto-login
   * Enable SSH server(if not using HDMI display)
-  * configure ALSA for microphone and speaker
+  * Configure ALSA for microphone and speaker
   * Git-clone repository
   * Install requirements
   * Install on/off configurations (make it auto start application)
@@ -135,7 +125,7 @@ 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
 
 make iso ---> https://www.tomshardware.com/how-to/back-up-raspberry-pi-as-disk-image
 
-iso without Source//installed only requirements but remove halo
+iso without Source//installed only requirements and not git/ but remove halo
 
 ### ISO making steps
 
@@ -143,3 +133,31 @@ iso without Source//installed only requirements but remove halo
   * sudo mkdir /dev/iso
   * sudo mount /dev/sda1 /dev/iso
   * sudo dd if=/dev/mmcblk0 of=/dev/iso/ruby.img bs=1M
+
+jack output usb mic ALSA
+
+sudo nano ~/.asoundrc
+
+pcm.!default {
+  type asym
+  playback.pcm {
+    type hw
+    card 0
+  }
+  capture.pcm {
+    type plug
+    slave {
+      pcm {
+        type hw
+        card 1
+        device 0
+      }
+    }
+  }
+}
+
+sudo nano /home/pi/.bashrc
+Go to the last line of the script and add:
+
+echo Running at boot
+python3 /home/pi/sample.py

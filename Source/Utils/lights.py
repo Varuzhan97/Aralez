@@ -5,8 +5,8 @@ from multiprocessing import Process
 class Lights:
     def __init__(self):
         self.red = 11
-        self.blue = 9
-        self.green = 10
+        self.green = 13
+        self.blue = 15
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.red, GPIO.OUT)

@@ -100,7 +100,6 @@ def load_play_tts_clip(tts_folder, specific = None, stop_time = 1):
     time.sleep(int(stop_time))
     if specific is not None:
         play = os.path.join(tts_folder, specific + ".mp3")
-        #os.system("mpg321 %s --stereo" % ('"' + play + '"'))
         p = subprocess.Popen(["mpg321", play, "--stereo"])
         p.wait()
     else:
@@ -109,7 +108,6 @@ def load_play_tts_clip(tts_folder, specific = None, stop_time = 1):
             if file.endswith(".mp3"):
                 all_files.append(os.path.join(tts_folder, file))
         play = random.choice(all_files)
-        #os.system("mpg321 %s --stereo" % ('"' + play + '"'))
         p = subprocess.Popen(["mpg321", play, "--stereo"])
         p.wait()
 
@@ -117,7 +115,6 @@ def load_play_tts_clip(tts_folder, specific = None, stop_time = 1):
 def play_tts_clip(clip_path, stop_time = 1):
     #Timer for a short stop befor speech
     time.sleep(int(stop_time))
-    #os.system("mpg321 %s --stereo" % ('"' + clip_path + '"'))
     p = subprocess.Popen(["mpg321", clip_path, "--stereo"])
     p.wait()
 

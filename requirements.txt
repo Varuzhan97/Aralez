@@ -1,8 +1,6 @@
 deepspeech
 PyYAML==5.4.1
 webrtcvad==2.0.10
-//tensorflow==1.14.0
 halo==0.0.31
-//numpy==1.19.5
-scipy==1.1.0 / real --> 1.2
+scipy==1.2
 python-Levenshtein==0.12.2

@@ -23,7 +23,7 @@ def press_checker(channel):
         button_status = 1
         subprocess.call(['shutdown', '-h', 'now'], shell=False)
     #2 - Long push (restart)
-    elif 2 <= button_time < 4:
+    elif 2 <= button_time:
         button_status = 2
         subprocess.call(['shutdown', '-r', 'now'], shell=False)
 

@@ -8,11 +8,12 @@ from QA import qa
 #from Dance import dance
 #from Movement import movement
 from Courses import courses
-from Utils import utils#, lights
+from Utils import utils, lights
 
 if __name__ == "__main__":
-    #Get current directory
-    main_dir = os.getcwd()
+    #Set current directory
+    #main_dir = os.getcwd()
+    main_dir = "/home/pi/Aralez/Source"
 
     #Load configurations for startup
     config_file_path = os.path.join(main_dir, "config.yaml")
@@ -84,8 +85,8 @@ if __name__ == "__main__":
     #self_dance = dance.Dance(self_move)
 
     #Declare Lights class object
-    #self_lights = lights.Lights()
-    #self_lights.set_led_color(0)
+    self_lights = lights.Lights()
+    self_lights.set_led_color(0)
 
     while True:
         speech = vad_audio.listen_audio()
