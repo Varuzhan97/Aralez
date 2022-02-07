@@ -85,16 +85,16 @@ speaker pdf https://cdn-learn.adafruit.com/downloads/pdf/adafruit-max98357-i2s-c
 
 ![alt text](https://github.com/Varuzhan97/Aralez/blob/main/gpio-pin.jpg)
 
-  l* On/Off button: 1 ---> GPIO03, PIN# 05 | 0 ---> Ground, PIN# 09
+  * + On/Off button: 1 ---> GPIO03, PIN# 05 | 0 ---> Ground, PIN# 09
   * Motor/wheel 1: input_1 GPIO17, PIN# 11 | input_2 GPIO27, PIN# 13 | enable_1 GPIO22, PIN# 15 | GROUND KA???
   * Motor/wheel 2: input_3 GPIO23, PIN# 16 | input_4 GPIO24, PIN# 18 | enable_2 GPIO25, PIN# 22 | GROUND KA???
-  l* RGB LED: Red ---> PIN# 11 | Green ---> PIN# 13 | Blue ---> PIN# 15 | 0 ---> Ground, PIN# 25
+  * RGB LED: Red ---> PIN# 11 | Green ---> PIN# 13 | Blue ---> PIN# 15 | 0 ---> Ground, PIN# 25
   * Ultrasonic transducer: trigger ---> GPIO18, PIN# 12 | echo ---> GPIO15, PIN# 10 | 0 ---> GROUND KA???
   * L298N motor driver: ?????????????????????????????
-  l* Mono speaker: 1 ---> amplifier 1 | 0 ---> amplifier 0
-  l* Mono speaker amplifier: Amp Vin to 5V  (Pi 2) | Amp GND to GND (Pi 20) | Amp DIN to  Pi 21 | Amp BCLK to  Pi 18 | Amp LRCLK to  Pi 19
-  l* Microphone: Mic 3V to Pi 3.3V (PIN# 17) | Mic GND to Pi GND (PIN# 34) | Mic SEL to Pi GND (this is used for channel selection, connect to either 3.3V or GND, PIN# 39) | Mic BCLK to BCM 18 (PIN# 12) | Mic DOUT to BCM 20 (PIN# 38) | Mic LRCL to BCM 19 (PIN# 35)
-  l* Cooler: 1 5V PIN#4 | 0 PIN#6
+  * + Mono speaker: 1 ---> amplifier 1 | 0 ---> amplifier 0
+  * + Mono speaker amplifier: Amp Vin to 5V  (Pi 2) | Amp GND to GND (Pi 20) | Amp DIN to  Pi 21 | Amp BCLK to  Pi 18 | Amp LRCLK to  Pi 19
+  * + Microphone: Mic 3V to Pi 3.3V (PIN# 17) | Mic GND to Pi GND (PIN# 34) | Mic SEL to Pi GND (this is used for channel selection, connect to either 3.3V or GND, PIN# 39) | Mic BCLK to BCM 18 (PIN# 12) | Mic DOUT to BCM 20 (PIN# 38) | Mic LRCL to BCM 19 (PIN# 35)
+  * + Cooler: 1 5V PIN#4 | 0 PIN#6
 
 ### Auto-login
 
@@ -131,25 +131,25 @@ To enable auto-login with raspi-config:
 
 > arecord -l ---> check microphone ID
 
-sudo nano ~/.asoundrc
+> sudo nano ~/.asoundrc
 
-pcm.!default {
-  type asym
-  playback.pcm {
-    type hw
-    card 0
-  }
-  capture.pcm {
-    type plug
-    slave {
-      pcm {
-        type hw
-        card 1
-        device 0
-      }
-    }
-  }
-}
+> pcm.!default {
+>   type asym
+>   playback.pcm {
+>     type hw
+>     card 0
+>   }
+>   capture.pcm {
+>     type plug
+>     slave {
+>       pcm {
+>         type hw
+>         card 1
+>         device 0
+>       }
+>     }
+>   }
+> }
 
 ### On startup run setup
 
