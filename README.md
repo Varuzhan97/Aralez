@@ -84,6 +84,7 @@ speaker pdf https://cdn-learn.adafruit.com/downloads/pdf/adafruit-max98357-i2s-c
 ### GPIO setup
 
 ![alt text](https://github.com/Varuzhan97/Aralez/blob/main/gpio-pin.jpg)
+![alt text](https://github.com/Varuzhan97/Aralez/blob/main/RGBLED_Pinout.jpeg)
 
   * + On/Off button: 1 ---> GPIO03, PIN# 05 | 0 ---> Ground, PIN# 09
   * Motor/wheel 1: input_1 GPIO17, PIN# 11 | input_2 GPIO27, PIN# 13 | enable_1 GPIO22, PIN# 15 | GROUND KA???
@@ -131,25 +132,25 @@ To enable auto-login with raspi-config:
 
 > arecord -l ---> check microphone ID
 
-> sudo nano ~/.asoundrc
+sudo nano ~/.asoundrc
 
-> pcm.!default {
->   type asym
->   playback.pcm {
->     type hw
->     card 0
->   }
->   capture.pcm {
->     type plug
->     slave {
->       pcm {
->         type hw
->         card 1
->         device 0
->       }
->     }
->   }
-> }
+pcm.!default {
+  type asym
+  playback.pcm {
+    type hw
+    card 0
+  }
+  capture.pcm {
+    type plug
+    slave {
+      pcm {
+        type hw
+        card 1
+        device 0
+      }
+    }
+  }
+}
 
 ### On startup run setup
 
