@@ -118,15 +118,6 @@ To enable auto-login with raspi-config:
   * Install on/off configurations (make it auto start application)
   * Install project configurations (make it auto start application)
 
-git add --all
-git commit -m "Update"
-git push origin main
-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
-
-make iso ---> https://www.tomshardware.com/how-to/back-up-raspberry-pi-as-disk-image
-
-iso without Source//installed only requirements and not git/ but remove halo
-
 ### ISO making steps
 
   * lsblk
@@ -134,7 +125,11 @@ iso without Source//installed only requirements and not git/ but remove halo
   * sudo mount /dev/sda1 /dev/iso
   * sudo dd if=/dev/mmcblk0 of=/dev/iso/ruby.img bs=1M
 
-jack output usb mic ALSA
+### Microphone and speaker setup
+
+> aplay -l ---> check speaker ID
+
+> arecord -l ---> check microphone ID
 
 sudo nano ~/.asoundrc
 
@@ -156,8 +151,12 @@ pcm.!default {
   }
 }
 
-sudo nano /home/pi/.bashrc
+### On startup run setup
+
+> sudo nano /home/pi/.bashrc
+
 Go to the last line of the script and add:
 
-echo Running at boot
-python3 /home/pi/sample.py
+> python3 /home/pi/sample.py
+
+ya garjus s taboi
