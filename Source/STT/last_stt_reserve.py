@@ -15,7 +15,7 @@ class Audio(object):
     FORMAT = pyaudio.paInt16
     #Network/VAD rate-space
     RATE_PROCESS = 16000
-    CHANNELS = 4
+    CHANNELS = 1
     BLOCKS_PER_SECOND = 50
 
     def __init__(self, callback=None, device=None, input_rate=RATE_PROCESS, file=None):
@@ -122,16 +122,12 @@ class VADAudio(Audio):
         triggered = False
 
         for frame in frames:
-            if len(frame) < 2560:
+            if len(frame) < 640:
                 return
 
-            pp = np.frombuffer(frame, np.int16)
-            ch = np.sum([pp[0::4], pp[1::4]], axis=0)
-            ch = np.int16(np.true_divide(ch,2))
-            ch = ch.tobytes()
-            is_speech = self.vad.is_speech(ch, self.sample_rate)
+            is_speech = self.vad.is_speech(frame, self.sample_rate)
             if not triggered:
-                ring_buffer.append((ch, is_speech))
+                ring_buffer.append((frame, is_speech))
                 num_voiced = len([f for f, speech in ring_buffer if speech])
                 if num_voiced > ratio * ring_buffer.maxlen:
                     triggered = True
@@ -140,8 +136,8 @@ class VADAudio(Audio):
                     ring_buffer.clear()
 
             else:
-                yield ch
-                ring_buffer.append((ch, is_speech))
+                yield frame
+                ring_buffer.append((frame, is_speech))
                 num_unvoiced = len([f for f, speech in ring_buffer if not speech])
                 if num_unvoiced > ratio * ring_buffer.maxlen:
                     triggered = False

@@ -5,15 +5,14 @@ from Games.Capitals import capitals
 from Games.Twenty_one import twenty_one
 from STT import stt
 from QA import qa
-#from Dance import dance
-#from Movement import movement
+#from Music import music
 from Courses import courses
 from Utils import utils#, lights
 
 if __name__ == "__main__":
     #Set current directory
-    #main_dir = os.getcwd()
-    main_dir = "/home/pi/Aralez/Source"
+    main_dir = os.getcwd()
+    #main_dir = "/home/pi/Aralez/Source"
 
     #Load configurations for startup
     config_file_path = os.path.join(main_dir, "config.yaml")
@@ -43,17 +42,23 @@ if __name__ == "__main__":
     twenty_one_tts_folder = main_config["Games"]["Twenty-one"]["TTS Folder"]
     twenty_one_tts_folder = os.path.join(main_dir, twenty_one_tts_folder)
 
+    riddles_data_folder = main_config["Games"]["Riddles"]["Data Folder"]
+    riddles_data_folder = os.path.join(main_dir, riddles_data_folder)
+
+    riddles_tts_folder = main_config["Games"]["Riddles"]["TTS Folder"]
+    riddles_tts_folder = os.path.join(main_dir, riddles_tts_folder)
+
     conversation_tts_folder = main_config["Conversation"]["TTS Folder"]
     conversation_tts_folder = os.path.join(main_dir, conversation_tts_folder)
 
     startup_tts_folder = main_config["Startup"]["TTS Folder"]
     startup_tts_folder = os.path.join(main_dir, startup_tts_folder)
 
-    dance_music_folder = main_config["Music"]["Dance Music Folder"]
-    dance_music_folder = os.path.join(main_dir, dance_music_folder)
+    song_folder = main_config["Music"]["Song Folder"]
+    song_folder = os.path.join(main_dir, song_folder)
 
-    lullaby_music_folder = main_config["Music"]["Lullaby Music Folder"]
-    lullaby_music_folder = os.path.join(main_dir, lullaby_music_folder)
+    lullaby_folder = main_config["Music"]["Lullaby Folder"]
+    lullaby_folder = os.path.join(main_dir, lullaby_folder)
 
     courses_tts_folder =  main_config["Courses"]["TTS Folder"]
     courses_tts_folder = os.path.join(main_dir, courses_tts_folder)
@@ -78,11 +83,9 @@ if __name__ == "__main__":
 
     #Play startup speech
     utils.load_play_tts_clip(os.path.join(startup_tts_folder, language, "0"))
-    #Declare Move class object
-    #self_move = movement.Move()
 
-    #Declare Dance class object
-    #self_dance = dance.Dance(self_move)
+    #Declare Music class object
+    #self_music = music.Music()
 
     #Declare Lights class object
     #self_lights = lights.Lights()
@@ -111,8 +114,8 @@ if __name__ == "__main__":
                     vad_audio.set_scorer(model_path, 'conversation.scorer')
                     continue
                 if resp == "19":
-                    #Start to dance
-                    #self_dance.start_dance(dance_music_folder, self_lights)
+                    #Play song
+                    self_music.play_music(song_folder, self_lights, choice = 0)
                     continue
                 if resp == "21":
                     #Forward
@@ -136,7 +139,8 @@ if __name__ == "__main__":
                     continue
                 if resp == "26":
                     #Change resp ID
-                    utils.load_play_tts_clip(lullaby_music_folder)
+                    #Play lullaby
+                    self_music.play_music(lullaby_folder, self_lights, choice = 1)
                     subprocess.call(["shutdown", "-h", "now"])
                 if resp == "29":
                     #Prevent same language course
@@ -170,6 +174,15 @@ if __name__ == "__main__":
                     new_model_path = os.path.join(stt_folder, str(1 - int(language)))
                     language = utils.change_language(vad_audio, new_model_path, main_config, config_file)
                     continue
+                #Configure scorer for riddles
+                if resp == "":
+                    utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
+                    #Load capitals scorer
+                    vad_audio.set_scorer(model_path, 'riddles.scorer')
+                    capitals.capitals(os.path.join(riddles_data_folder, language), os.path.join(riddles_tts_folder, language), vad_audio)
+                    vad_audio.set_scorer(model_path, 'conversation.scorer')
+                    continue
+                ###
                 utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
             else:
                 utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))

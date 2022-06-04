@@ -32,7 +32,6 @@ class Lights:
             GPIO.output(self.blue, GPIO.HIGH)
             time.sleep(1)
 
-
     #Function to change LED lights
     #Color ID's
     #0 ---> red

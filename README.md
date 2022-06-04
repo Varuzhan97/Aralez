@@ -11,31 +11,15 @@ Language courses are:
   - [x] English
   - [x] Russian
 
-STT training results are:
-  - [x] English
-    * Train loss: 0.000000
-    * Validation loss: -0.000000
-    * Dataset: ~/En/clips                                    
-    * Checkpoint: ~/En/Checkpoints/best_dev-1818201
-    * Test WER: 0.000000
-    * Test CER: 0.000000
-    * Test Loss: -0.000000
-  - [x] Russian
-    * Train loss: 0.000001
-    * Validation loss: -0.000000
-    * Dataset: ~/Ru/clips                 
-    * Checkpoint: ~/Ru/Checkpoints/best_dev-2228668
-    * Test WER: 0.000000
-    * Test CER: 0.000000
-    * Test Loss: 0.000038
-
 ### Environment and Requirements
   * OS: Raspberry Pi OS Lite 32-bit(Legacy / Debian Buster 10)
   * Python 3 version: 3.7.3.
   * Pip 3 version: 18.1.
 
 Install the required dependencies:
-> sudo apt-get update
+> sudo apt-get -y update
+
+> sudo apt-get -y upgrade
 
 > sudo apt-get install python3-pip python3-pyaudio libatlas3-base
 
@@ -138,14 +122,14 @@ pcm.!default {
   type asym
   playback.pcm {
     type hw
-    card 0
+    card 1
   }
   capture.pcm {
     type plug
     slave {
       pcm {
         type hw
-        card 1
+        card 0
         device 0
       }
     }
@@ -160,4 +144,63 @@ Go to the last line of the script and add:
 
 > python3 /home/pi/sample.py
 
+https://giters.com/makerportal/rpi_i2s
+
+https://makersportal.com/blog/recording-stereo-audio-on-a-raspberry-pi
+
+https://www.seeedstudio.com/ReSpeaker-Mic-Array-v2-0.html
+https://wiki.seeedstudio.com/ReSpeaker_Mic_Array/
+https://respeaker.io/make_a_smart_speaker/
+
+Core 2 tutorial: https://eungbean.github.io/2018/11/08/respeakercore-Debian-setup/
+                 https://github.com/respeaker/get_started_with_respeaker/blob/master/docs/ReSpeaker_Core_V2/getting_started.md
+
+businnes https://api.bso.am/public/uploads/helpfull_guides/1635846680619.pdf
+         https://api.bso.am/public/uploads/helpfull_guides/1635845726736.pdf
+         https://api.bso.am/public/uploads/helpfull_guides/1633375965111.pdf
+
+
+bonnet speaker https://cdn-learn.adafruit.com/downloads/pdf/adafruit-speaker-bonnet-for-raspberry-pi.pdf
+smart example https://www.instructables.com/Make-a-Smart-Speaker-With-Raspberry-Pi-for-Daily-U/
+https://github.com/respeaker/seeed-voicecard
+https://github.com/respeaker/mic_array/blob/master/mic_array.py
+
+
+
 ya garjus s taboi
+
+Do you have a favourite colour?
+What is your favourite colour?
+Do you know riddles?
+Ask me a riddle.
+Can you play music?
+Play music.
+-----------------
+у тебя есть любимый цвет?
+какой твой любимый цвет?
+ты знаешь загадки?
+задай мне загадку.
+ты умеешь проигрывать музыку?
+проиграй музыку.
+
+replace
+
+come here: 20
+go forward: 21
+go back: 22
+go left: 23
+go right: 24
+turn around: 25
+
+иди сюда
+иди вперед
+иди назад
+иди налево
+иди направо
+повернись
+
+remove
+
+-can you dance: 18
+dance: 19
+start to dance: 19
