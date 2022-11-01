@@ -124,14 +124,19 @@ class VADAudio(Audio):
         for frame in frames:
             if len(frame) < 2560:
                 return
-            #ch = np.sum([frame[0::4], frame[1::4], frame[2::4], frame[3::4]], axis=0)
-            pp = np.frombuffer(frame, np.int16)
-            ch = np.sum([pp[0::4], pp[1::4]], axis=0)
-            ch = np.int16(np.true_divide(ch,2))
-            ch = ch.tobytes()
-            is_speech = self.vad.is_speech(ch, self.sample_rate)
+
+            frame = np.frombuffer(frame, np.int16)
+            data = frame.reshape((4,-1), order='F')
+            b = 1/len(data)
+            x = np.int16(0)
+            for c in data:
+                x+=c*b
+            frame = x.astype(np.int16)
+            frame = frame.tobytes()
+
+            is_speech = self.vad.is_speech(frame, self.sample_rate)
             if not triggered:
-                ring_buffer.append((ch, is_speech))
+                ring_buffer.append((frame, is_speech))
                 num_voiced = len([f for f, speech in ring_buffer if speech])
                 if num_voiced > ratio * ring_buffer.maxlen:
                     triggered = True
@@ -140,8 +145,8 @@ class VADAudio(Audio):
                     ring_buffer.clear()
 
             else:
-                yield ch
-                ring_buffer.append((ch, is_speech))
+                yield frame
+                ring_buffer.append((frame, is_speech))
                 num_unvoiced = len([f for f, speech in ring_buffer if not speech])
                 if num_unvoiced > ratio * ring_buffer.maxlen:
                     triggered = False
