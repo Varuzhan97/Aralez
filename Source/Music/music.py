@@ -25,10 +25,10 @@ class Music:
         music_proc = None
 
         if choice == 0:
-            music_proc = multiprocessing.Process(target=self.play_music,args=(music_folder_path, shared_num,))
+            music_proc = multiprocessing.Process(target=self.play_song,args=(music_folder_path, shared_num,))
             music_proc.start()
         if choice == 1:
-            music_proc = multiprocessing.Process(target=self.play_music,args=(play_lullaby, shared_num,))
+            music_proc = multiprocessing.Process(target=self.play_lullaby,args=(music_folder_path, shared_num,))
             music_proc.start()
 
         lights_proc = multiprocessing.Process(target=lights.light_show, args=(shared_num,))

@@ -49,6 +49,8 @@ class Audio(object):
             self.chunk = 320
             self.wf = wave.open(file, 'rb')
 
+        self.pa = pyaudio.PyAudio()
+
     def resample(self, data, input_rate):
         """
         Microphone may not support our native processing sampling rate, so
@@ -74,10 +76,8 @@ class Audio(object):
         return self.buffer_queue.get()
 
     #original place
-    #def destroy(self):
-        #self.stream.stop_stream()
-        #self.stream.close()
-        #self.pa.terminate()
+    def destroy(self):
+        self.pa.terminate()
 
     #frame_duration_ms = 20
     frame_duration_ms = property(lambda self: 1000 * self.block_size // self.sample_rate)
@@ -124,7 +124,7 @@ class VADAudio(Audio):
         for frame in frames:
             if len(frame) < 2560:
                 return
-
+            #ch = np.sum([frame[0::4], frame[1::4], frame[2::4], frame[3::4]], axis=0)
             pp = np.frombuffer(frame, np.int16)
             ch = np.sum([pp[0::4], pp[1::4]], axis=0)
             ch = np.int16(np.true_divide(ch,2))
@@ -154,8 +154,7 @@ class VADAudio(Audio):
     def set_model(self, model_path, model_name):
         self.model = deepspeech.Model(os.path.join(model_path, model_name))
 
-    def listen_audio(self, save_wav_path = None):
-        self.pa = pyaudio.PyAudio()
+    def listen_audio(self, lights, save_wav_path = None):
         self.stream = self.pa.open(**self.kwargs)
         self.stream.start_stream()
 
@@ -167,10 +166,12 @@ class VADAudio(Audio):
         wav_data = bytearray()
         for frame in frames:
             if frame is not None:
+                lights.set_led_color(2)
                 if spinner: spinner.start()
                 stream_context.feedAudioContent(np.frombuffer(frame, np.int16))
                 if save_wav_path is not None: wav_data.extend(frame)
             else:
+                lights.set_led_color(1)
                 if spinner: spinner.stop()
                 if save_wav_path is not None:
                     file_name = os.path.join(save_wav_path, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav"))
@@ -179,7 +180,7 @@ class VADAudio(Audio):
                 text = stream_context.finishStream()
                 self.stream.stop_stream()
                 self.stream.close()
-                self.pa.terminate()
+                #self.pa.terminate()
                 if save_wav_path is not None:
                     return text.strip(), file_name, file_size
                 else:

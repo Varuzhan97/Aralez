@@ -1,4 +1,0 @@
-Run the setup script:
-cd Aralez
-chmod +x ./shutdown_restart/install
-./shutdown_restart/install

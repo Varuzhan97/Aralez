@@ -81,7 +81,7 @@ def twenty_one(twenty_one_tts_folder, vad_audio):
     #Game starts from -1
     current_number = -1
     range_limit = 3
-    random.seed(time.clock())
+    random.seed(time.process_time())
     #Choose first to start // 0 -> robot | 1 -> child
     first_start = random.randint(0, 1)
 

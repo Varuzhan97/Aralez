@@ -110,6 +110,8 @@ To enable auto-login with raspi-config:
   * sudo mount /dev/sda1 /dev/iso
   * sudo dd if=/dev/mmcblk0 of=/dev/iso/ruby.img bs=1M
 
+
+powr suply 7,9 --> 16,18
 ### Microphone and speaker setup
 
 > aplay -l ---> check speaker ID
@@ -152,8 +154,6 @@ https://www.seeedstudio.com/ReSpeaker-Mic-Array-v2-0.html
 https://wiki.seeedstudio.com/ReSpeaker_Mic_Array/
 https://respeaker.io/make_a_smart_speaker/
 
-Core 2 tutorial: https://eungbean.github.io/2018/11/08/respeakercore-Debian-setup/
-                 https://github.com/respeaker/get_started_with_respeaker/blob/master/docs/ReSpeaker_Core_V2/getting_started.md
 
 businnes https://api.bso.am/public/uploads/helpfull_guides/1635846680619.pdf
          https://api.bso.am/public/uploads/helpfull_guides/1635845726736.pdf
@@ -165,6 +165,7 @@ smart example https://www.instructables.com/Make-a-Smart-Speaker-With-Raspberry-
 https://github.com/respeaker/seeed-voicecard
 https://github.com/respeaker/mic_array/blob/master/mic_array.py
 
+https://github.com/PiSupply/Pi-Supply-Switch
 
 
 ya garjus s taboi
@@ -204,3 +205,8 @@ remove
 -can you dance: 18
 dance: 19
 start to dance: 19
+
+
+https://github.com/PiSupply/Pi-Supply-Switch
+
+https://wiki.seeedstudio.com/ReSpeaker_4-Mic_Linear_Array_Kit_for_Raspberry_Pi/

@@ -3,33 +3,31 @@ import time
 from multiprocessing import Process
 
 class Lights:
-    def __init__(self):
-        self.red = 11
-        self.green = 13
-        self.blue = 15
+    def __init__(self, default_color = 1):
+        self.red = 16
+        self.blue = 18
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.red, GPIO.OUT)
         GPIO.setup(self.blue, GPIO.OUT)
-        GPIO.setup(self.green, GPIO.OUT)
         self.reset_led()
+        self.set_led_color(default_color)
 
     def reset_led(self):
-        GPIO.output(self.red, GPIO.LOW)
-        GPIO.output(self.blue, GPIO.LOW)
-        GPIO.output(self.green, GPIO.LOW)
+        GPIO.output(self.red, GPIO.HIGH)
+        GPIO.output(self.blue, GPIO.HIGH)
 
     def light_show(self, shared_num):
         self.reset_led()
         while shared_num.value == 0:
-            GPIO.output(self.blue, GPIO.LOW)
+            GPIO.output(self.red, GPIO.LOW)
+            GPIO.output(self.blue, GPIO.HIGH)
+            time.sleep(1)
             GPIO.output(self.red, GPIO.HIGH)
+            GPIO.output(self.blue, GPIO.LOW)
             time.sleep(1)
             GPIO.output(self.red, GPIO.LOW)
-            GPIO.output(self.green, GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.green, GPIO.LOW)
-            GPIO.output(self.blue, GPIO.HIGH)
+            GPIO.output(self.blue, GPIO.LOW)
             time.sleep(1)
 
     #Function to change LED lights
@@ -40,8 +38,9 @@ class Lights:
     def set_led_color(self, color_id: int):
         self.reset_led()
         if color_id == 0:
-            GPIO.output(self.blue, GPIO.HIGH)
+            GPIO.output(self.red, GPIO.LOW)
         elif color_id == 1:
-            GPIO.output(self.green, GPIO.HIGH)
+            GPIO.output(self.blue, GPIO.LOW)
         elif color_id == 2:
-            GPIO.output(self.red, GPIO.HIGH)
+            GPIO.output(self.red, GPIO.LOW)
+            GPIO.output(self.blue, GPIO.LOW)
