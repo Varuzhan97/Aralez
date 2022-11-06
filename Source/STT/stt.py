@@ -8,6 +8,7 @@ import wave
 import webrtcvad
 from halo import Halo
 from scipy import signal
+from functools import reduce
 
 class Audio(object):
     """Streams raw audio from microphone. Data is received in a separate thread, and stored in a buffer, to be read from."""
@@ -127,12 +128,11 @@ class VADAudio(Audio):
 
             frame = np.frombuffer(frame, np.int16)
             data = frame.reshape((4,-1), order='F')
-            b = 1/len(data)
+            b = 1/self.CHANNELS
             x = np.int16(0)
             for c in data:
                 x+=c*b
-            frame = x.astype(np.int16)
-            frame = frame.tobytes()
+            frame = np.int16(x).tobytes()
 
             is_speech = self.vad.is_speech(frame, self.sample_rate)
             if not triggered:

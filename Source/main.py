@@ -73,14 +73,14 @@ if __name__ == "__main__":
     vad_audio.set_model(model_path, 'model.tflite')
     vad_audio.set_scorer(model_path, 'conversation.scorer')
 
-    #Play startup speech
-    utils.load_play_tts_clip(os.path.join(startup_tts_folder, language, "0"))
-
     #Declare Music class object
     self_music = music.Music()
 
     #Declare Lights class object
     self_lights = lights.Lights()
+
+    #Play startup speech
+    utils.load_play_tts_clip(tts_folder = os.path.join(startup_tts_folder, language, "0"), stop_time = 0)
 
     while True:
         speech = vad_audio.listen_audio(self_lights)
@@ -135,9 +135,9 @@ if __name__ == "__main__":
                     continue
                 ###
                 else:
-                    utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
+                    utils.load_play_tts_clip(tts_folder = os.path.join(conversation_tts_folder, language, resp), stop_time = 0)
             else:
                 self_lights.set_led_color(0)
-                utils.load_play_tts_clip(ununderstandable_tts_folder)
+                utils.load_play_tts_clip(tts_folder = ununderstandable_tts_folder, stop_time = 0)
                 self_lights.set_led_color(1)
     config_file.close()

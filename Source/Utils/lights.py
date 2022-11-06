@@ -4,8 +4,8 @@ from multiprocessing import Process
 
 class Lights:
     def __init__(self, default_color = 1):
-        self.red = 16
-        self.blue = 18
+        self.red = 12
+        self.blue = 13
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.red, GPIO.OUT)
@@ -29,6 +29,9 @@ class Lights:
             GPIO.output(self.red, GPIO.LOW)
             GPIO.output(self.blue, GPIO.LOW)
             time.sleep(1)
+
+        #Reset colors
+        self.set_led_color(1)
 
     #Function to change LED lights
     #Color ID's
