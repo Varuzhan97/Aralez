@@ -8,6 +8,7 @@ class Lights:
         self.blue = 13
 
         GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
         GPIO.setup(self.red, GPIO.OUT)
         GPIO.setup(self.blue, GPIO.OUT)
         self.reset_led()
