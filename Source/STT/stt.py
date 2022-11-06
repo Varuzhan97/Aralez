@@ -50,8 +50,6 @@ class Audio(object):
             self.chunk = 320
             self.wf = wave.open(file, 'rb')
 
-        self.pa = pyaudio.PyAudio()
-
     def resample(self, data, input_rate):
         """
         Microphone may not support our native processing sampling rate, so
@@ -77,8 +75,7 @@ class Audio(object):
         return self.buffer_queue.get()
 
     #original place
-    def destroy(self):
-        self.pa.terminate()
+    #def destroy(self):
 
     #frame_duration_ms = 20
     frame_duration_ms = property(lambda self: 1000 * self.block_size // self.sample_rate)
@@ -160,6 +157,7 @@ class VADAudio(Audio):
         self.model = deepspeech.Model(os.path.join(model_path, model_name))
 
     def listen_audio(self, lights, save_wav_path = None):
+        self.pa = pyaudio.PyAudio()
         self.stream = self.pa.open(**self.kwargs)
         self.stream.start_stream()
 
@@ -184,9 +182,14 @@ class VADAudio(Audio):
                     wav_data = bytearray()
                 text = stream_context.finishStream()
                 self.stream.stop_stream()
-                self.stream.close()
+                #self.stream.close()
                 #self.pa.terminate()
                 if save_wav_path is not None:
-                    return text.strip(), file_name, file_size
+                    yield text.strip(), file_name, file_size
                 else:
-                    return text.strip()
+                    yield text.strip()
+                self.stream.start_stream()
+                stream_context = self.model.createStream()
+                #stream_context = self.model.createStream()
+        self.stream.stop_stream()
+        self.pa.terminate()

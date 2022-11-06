@@ -82,7 +82,8 @@ if __name__ == "__main__":
     #Play startup speech
     utils.load_play_tts_clip(tts_folder = os.path.join(startup_tts_folder, language, "0"), stop_time = 0)
 
-    while True:
+    for speech in vad_audio.listen_audio(self_lights):
+    #while True:
         speech = vad_audio.listen_audio(self_lights)
         print("STT result: %s" % speech)
         if speech != "":
