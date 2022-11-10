@@ -37,8 +37,8 @@ class Lights:
     #Function to change LED lights
     #Color ID's
     #0 ---> red
-    #1 ---> bright green / yellow
-    #2 ---> dark green / yellow
+    #1 ---> blue
+    #2 ---> mix
     def set_led_color(self, color_id: int):
         self.reset_led()
         if color_id == 0:

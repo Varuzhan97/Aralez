@@ -6,8 +6,8 @@ from Games.Twenty_one import twenty_one
 from Games.Riddles import riddles
 from STT import stt
 from QA import qa
-from Music import music
-from Utils import utils, lights
+#from Music import music
+from Utils import utils#, lights
 
 if __name__ == "__main__":
     #Set current directory
@@ -68,23 +68,23 @@ if __name__ == "__main__":
     model_path = os.path.join(stt_folder, language)
 
     # Start audio with VAD
-    vad_audio = stt.VADAudio(aggressiveness = 3, input_rate=16000)
+    #vad_audio = stt.VADAudio(aggressiveness = 3, input_rate=16000)
+    transcription = stt.Transcript()
 
-    vad_audio.set_model(model_path, 'model.tflite')
-    vad_audio.set_scorer(model_path, 'conversation.scorer')
+    transcription.set_model(model_path, 'model.tflite')
+    transcription.set_scorer(model_path, 'conversation.scorer')
 
     #Declare Music class object
-    self_music = music.Music()
+    #self_music = music.Music()
 
     #Declare Lights class object
-    self_lights = lights.Lights()
+    #self_lights = lights.Lights()
 
     #Play startup speech
     utils.load_play_tts_clip(tts_folder = os.path.join(startup_tts_folder, language, "0"), stop_time = 0)
 
-    for speech in vad_audio.listen_audio(self_lights):
+    for speech in transcription.listen_audio():
     #while True:
-        speech = vad_audio.listen_audio(self_lights)
         print("STT result: %s" % speech)
         if speech != "":
             resp = str(qa.get_answer(speech, os.path.join(qa_data_folder, language)))
@@ -94,27 +94,27 @@ if __name__ == "__main__":
                 if resp == "15":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     #Load capitals scorer
-                    vad_audio.set_scorer(model_path, 'capitals.scorer')
-                    capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), vad_audio)
-                    vad_audio.set_scorer(model_path, 'conversation.scorer')
+                    transcription.set_scorer(model_path, 'capitals.scorer')
+                    capitals.capitals(capitals_questions_number, os.path.join(capitals_data_folder, language), os.path.join(capitals_tts_folder, language), transcription)
+                    transcription.set_scorer(model_path, 'conversation.scorer')
                     continue
                 elif resp == "16":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     #Load twenty one scorer
-                    vad_audio.set_scorer(model_path, 'twenty_one.scorer')
-                    twenty_one.twenty_one(os.path.join(twenty_one_tts_folder, language), vad_audio)
-                    vad_audio.set_scorer(model_path, 'conversation.scorer')
+                    transcription.set_scorer(model_path, 'twenty_one.scorer')
+                    twenty_one.twenty_one(os.path.join(twenty_one_tts_folder, language), transcription)
+                    transcription.set_scorer(model_path, 'conversation.scorer')
                     continue
                 elif resp == "23":
                     #Play song
-                    self_music.play_music(song_folder, self_lights, choice = 0)
+                    self_music.play_music(song_folder, choice = 0)
                     continue
                 elif resp == "22":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     #Load capitals scorer
-                    vad_audio.set_scorer(model_path, 'riddles.scorer')
-                    riddles.riddles(os.path.join(riddles_data_folder, language), os.path.join(riddles_tts_folder, language), vad_audio, correct_tts_folder, wrong_tts_folder)
-                    vad_audio.set_scorer(model_path, 'conversation.scorer')
+                    transcription.set_scorer(model_path, 'riddles.scorer')
+                    riddles.riddles(os.path.join(riddles_data_folder, language), os.path.join(riddles_tts_folder, language), transcription, correct_tts_folder, wrong_tts_folder)
+                    transcription.set_scorer(model_path, 'conversation.scorer')
                     continue
                 elif resp == "23":
                     #Left
@@ -123,7 +123,7 @@ if __name__ == "__main__":
                 elif resp == "26":
                     #Change resp ID
                     #Play lullaby
-                    self_music.play_music(lullaby_folder, self_lights, choice = 1)
+                    self_music.play_music(lullaby_folder, choice = 1)
                     subprocess.call(["shutdown", "-h", "now"])
                 elif resp == "31":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
@@ -132,13 +132,13 @@ if __name__ == "__main__":
                     utils.load_play_tts_clip(os.path.join(conversation_tts_folder, language, resp))
                     #Toggle language ID
                     new_model_path = os.path.join(stt_folder, str(1 - int(language)))
-                    language = utils.change_language(vad_audio, new_model_path, main_config, config_file)
+                    language = utils.change_language(transcription, new_model_path, main_config, config_file)
                     continue
                 ###
                 else:
                     utils.load_play_tts_clip(tts_folder = os.path.join(conversation_tts_folder, language, resp), stop_time = 0)
             else:
-                self_lights.set_led_color(0)
+                #self_lights.set_led_color(0)
                 utils.load_play_tts_clip(tts_folder = ununderstandable_tts_folder, stop_time = 0)
-                self_lights.set_led_color(1)
+                #self_lights.set_led_color(1)
     config_file.close()

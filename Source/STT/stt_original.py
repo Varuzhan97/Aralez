@@ -1,7 +1,7 @@
-import time, logging
+import time
 from datetime import datetime
 import threading, collections, queue, os, os.path
-import stt
+import deepspeech
 import numpy as np
 import pyaudio
 import wave
@@ -9,15 +9,13 @@ import webrtcvad
 from halo import Halo
 from scipy import signal
 
-logging.basicConfig(level=20)
-
 class Audio(object):
     """Streams raw audio from microphone. Data is received in a separate thread, and stored in a buffer, to be read from."""
 
     FORMAT = pyaudio.paInt16
     # Network/VAD rate-space
     RATE_PROCESS = 16000
-    CHANNELS = 1
+    CHANNELS = 4
     BLOCKS_PER_SECOND = 50
 
     def __init__(self, callback=None, device=None, input_rate=RATE_PROCESS, file=None):
@@ -36,7 +34,7 @@ class Audio(object):
         self.block_size_input = int(self.input_rate / float(self.BLOCKS_PER_SECOND))
         self.pa = pyaudio.PyAudio()
 
-        kwargs = {
+        self.kwargs = {
             'format': self.FORMAT,
             'channels': self.CHANNELS,
             'rate': self.input_rate,
@@ -53,8 +51,13 @@ class Audio(object):
             self.chunk = 320
             self.wf = wave.open(file, 'rb')
 
-        self.stream = self.pa.open(**kwargs)
+    def start_stream(self):
+        self.stream = self.pa.open(**self.kwargs)
         self.stream.start_stream()
+
+    def pause_stream(self):
+        self.stream.stop_stream()
+        self.stream.close()
 
     def resample(self, data, input_rate):
         """
@@ -127,8 +130,21 @@ class VADAudio(Audio):
         triggered = False
 
         for frame in frames:
-            if len(frame) < 640:
+            #if len(frame) < 640:
+            if len(frame) < 2560:
                 return
+
+            ###
+            #print(len((frame)))
+            frame = np.frombuffer(frame, np.int16)
+            data = frame.reshape((4,-1), order='F')
+            b = 1/self.CHANNELS
+            x = np.int16(0)
+            for c in data:
+                x+=c*b
+            frame = (x.astype(np.int16)).tostring()
+            #print(len(frame))
+            ###
 
             is_speech = self.vad.is_speech(frame, self.sample_rate)
 
@@ -150,52 +166,59 @@ class VADAudio(Audio):
                     yield None
                     ring_buffer.clear()
 
-def main(ARGS):
-    # Load STT model
-    if os.path.isdir(ARGS.model):
-        model_dir = ARGS.model
-        ARGS.model = os.path.join(model_dir, 'output_graph.pb')
-        ARGS.scorer = os.path.join(model_dir, ARGS.scorer)
+class Transcript:
+    """Filter & segment audio with voice activity detection."""
 
-    print('Initializing model...')
-    logging.info("ARGS.model: %s", ARGS.model)
-    model = stt.Model(ARGS.model)
-    if ARGS.scorer:
-        logging.info("ARGS.scorer: %s", ARGS.scorer)
-        model.enableExternalScorer(ARGS.scorer)
+    def __init__(self, aggressiveness=3, device=None, input_rate=None, file=None):
+        self.model = None
 
-    # Start audio with VAD
-    vad_audio = VADAudio(aggressiveness=ARGS.vad_aggressiveness,
-                         device=ARGS.device,
-                         input_rate=ARGS.rate,
-                         file=ARGS.file)
-    print("Listening (ctrl-C to exit)...")
-    frames = vad_audio.vad_collector()
+    def set_scorer(self, scorer_path, scorer_name):
+        self.model.enableExternalScorer(os.path.join(scorer_path, scorer_name))
 
-    # Stream from microphone to STT using VAD
-    spinner = None
-    if not ARGS.nospinner:
-        spinner = Halo(spinner='line')
-    stream_context = model.createStream()
-    wav_data = bytearray()
-    for frame in frames:
-        if frame is not None:
-            if spinner: spinner.start()
-            logging.debug("streaming frame")
-            stream_context.feedAudioContent(np.frombuffer(frame, np.int16))
-            if ARGS.savewav: wav_data.extend(frame)
-        else:
-            if spinner: spinner.stop()
-            logging.debug("end utterence")
-            if ARGS.savewav:
-                vad_audio.write_wav(os.path.join(ARGS.savewav, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav")), wav_data)
-                wav_data = bytearray()
-            text = stream_context.finishStream()
-            print("Recognized: %s" % text)
-            if ARGS.keyboard:
-                from pyautogui import typewrite
-                typewrite(text)
-            stream_context = model.createStream()
+    def set_model(self, model_path, model_name):
+        self.model = deepspeech.Model(os.path.join(model_path, model_name))
+
+    def listen_audio(self, nospinner = False, savewav = None, keyboard = False):
+
+        # Start audio with VAD
+        self.vad_audio = VADAudio(aggressiveness=3,
+                             device=None,
+                             input_rate=16000,
+                             file=None)
+
+        print("Listening (ctrl-C to exit)...")
+        self.vad_audio.start_stream()
+        frames = self.vad_audio.vad_collector()
+
+        # Stream from microphone to STT using VAD
+        spinner = None
+        if not nospinner:
+            spinner = Halo(spinner='line')
+        stream_context = self.model.createStream()
+        wav_data = bytearray()
+
+        for frame in frames:
+            if frame is not None:
+                if spinner: spinner.start()
+                stream_context.feedAudioContent(np.frombuffer(frame, np.int16))
+                if savewav: wav_data.extend(frame)
+            else:
+                if spinner: spinner.stop()
+                if savewav:
+                    vad_audio.write_wav(os.path.join(savewav, datetime.now().strftime("savewav_%Y-%m-%d_%H-%M-%S_%f.wav")), wav_data)
+                    wav_data = bytearray()
+
+                self.vad_audio.pause_stream()
+                text = stream_context.finishStream()
+                print("Recognized: %s" % text)
+                yield text
+                if keyboard:
+                    from pyautogui import typewrite
+                    typewrite(text)
+
+                self.vad_audio.start_stream()
+                stream_context = self.model.createStream()
+
 
 if __name__ == '__main__':
     DEFAULT_SAMPLE_RATE = 16000
